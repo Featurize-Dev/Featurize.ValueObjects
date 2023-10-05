@@ -11,19 +11,39 @@ using System.Text.Json.Serialization;
 namespace Featurize.ValueObjects;
 
 
+/// <summary>
+/// Represents an encrypted value of T.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 [JsonConverter(typeof(EncryptedConverter))]
 [DebuggerDisplay("{DebuggerDisplay}")]
 public record Encrypted<T> : IValueObject<Encrypted<T>>
 {
-    private static byte[] _unknown = Encoding.UTF8.GetBytes("?");
+    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes("?");
+
     private byte[] _value = Array.Empty<byte>();
+    
+    /// <summary>
+    /// Represents an unkown value.
+    /// </summary>
     public static Encrypted<T> Unknown => new() { _value = _unknown };
+    
+    /// <summary>
+    /// Represents an empty value.
+    /// </summary>
     public static Encrypted<T> Empty => new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
 
+    /// <summary>
+    /// Creates an new instance of <see cref="Encrypted{T}"/>.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="encryptor"></param>
+    /// <param name="converter"></param>
+    /// <returns></returns>
     public static Encrypted<T> Create(T value, ICryptoTransform encryptor, TypeConverter? converter = null)
     {
         using var memoryStream = new MemoryStream();
@@ -37,6 +57,12 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
         return new Encrypted<T> { _value = memoryStream.ToArray() };
     }
 
+    /// <summary>
+    /// Decrypts a encrypted value to its original type.
+    /// </summary>
+    /// <param name="decryptor">The Decryption to use.</param>
+    /// <param name="converter">The TypeConverter to use.</param>
+    /// <returns>Returns the original value if Decrypted successfull otherwise Null.</returns>
     public T? Decrypt(ICryptoTransform decryptor, TypeConverter? converter = null)
     {
         converter ??= TypeDescriptor.GetConverter(typeof(T));
@@ -67,25 +93,55 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
         }
         catch (CryptographicException ex)
         {
-
+            Debug.WriteLine(ex.Message);
+            return default;
         }
         return result;
     }
 
+    /// <summary>
+    /// Returns a base64 string that represents the encrypted value.
+    /// </summary>
+    /// <returns></returns>
     public override string ToString()
     {
         return Convert.ToBase64String(_value);
     }
 
+    /// <summary>
+    /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
+    /// </summary>
+    /// <param name="s">String value of an encrypted value.</param>
+    /// <returns></returns>
     public static Encrypted<T> Parse(string s) =>
         Parse(s, CultureInfo.InvariantCulture);
 
+    /// <summary>
+    /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
+    /// </summary>
+    /// <param name="s">String value of an encrypted value.</param>
+    /// <param name="provider">An object that supplies culture-specific formatting information about s. If provider is null, the thread current culture is used.</param>
+    /// <returns>Returns EmailAddress object.</returns>
+    /// <exception cref="FormatException"></exception>
     public static Encrypted<T> Parse(string s, IFormatProvider? provider)
         => TryParse(s, provider, out var result) ? result : throw new FormatException();
 
+    /// <summary>
+    /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
+    /// </summary>
+    /// <param name="s">String value of an encrypted value.</param>
+    /// <param name="result">EmailAddress object.</param>
+    /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Encrypted<T> result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
 
+    /// <summary>
+    /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
+    /// </summary>
+    /// <param name="s">String value of an encrypted value.</param>
+    /// <param name="provider">An object that supplies culture-specific formatting information about s. If provider is null, the thread current culture is used.</param>
+    /// <param name="result">EmailAddress object.</param>
+    /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Encrypted<T> result)
     {
         result = Empty;
@@ -103,5 +159,9 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
         return true;
     }
 
+    /// <summary>
+    /// Indicates that the <see cref="Encrypted{T}"/> is Empty
+    /// </summary>
+    /// <returns>true if Empty.</returns>
     public bool IsEmpty() => this == Empty;
 }

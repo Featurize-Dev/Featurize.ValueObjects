@@ -7,16 +7,34 @@ using System.Text.RegularExpressions;
 
 namespace Featurize.ValueObjects;
 
+
+/// <summary>
+/// Object that represents a EmailAddress.
+/// </summary>
 [DebuggerDisplay("{DebuggerDisplay}")]
 public record struct EmailAddress() : IValueObject<EmailAddress>
 {
     private string _value = string.Empty;
+    
+    /// <summary>
+    /// The local part of an email address.
+    /// </summary>
+    public readonly string Local => _value is { Length: > 1 } ? _value[.._value.IndexOf('@')] : string.Empty;
 
-    public const int MaxLength = 254;
-    public string Local => _value is { Length: > 1 } ? _value[.._value.IndexOf('@')] : string.Empty;
-    public string Domain => _value is { Length: > 2 } ? _value[(_value.IndexOf('@') + 1)..] : string.Empty;
-    public bool IsIPBased => _value is { Length: > 1 } && _value[^1] == ']';
-    public IPAddress IPDomain
+    /// <summary>
+    /// The domain part of an email address.
+    /// </summary>
+    public readonly string Domain => _value is { Length: > 2 } ? _value[(_value.IndexOf('@') + 1)..] : string.Empty;
+
+    /// <summary>
+    /// Indicates if an emailaddress is IP Based.
+    /// </summary>
+    public readonly bool IsIPBased => _value is { Length: > 1 } && _value[^1] == ']';
+
+    /// <summary>
+    /// The IPAddress of of IPBased email address.
+    /// </summary>
+    public readonly IPAddress IPDomain
     {
         get
         {
@@ -31,23 +49,47 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         }
     }
 
-    public override string ToString()
+    /// <summary>
+    /// Returns a string that represents the <see cref="EmailAddress"/>.
+    /// </summary>
+    /// <returns>string value of the email address.</returns>
+    public override readonly string ToString()
     {
         return _value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => ToString();
+    private readonly string DebuggerDisplay => ToString();
 
+    /// <summary>
+    /// An unkown email address.
+    /// </summary>
     public static EmailAddress Unknown => new() { _value = "?" };
 
+    /// <summary>
+    /// An Empty email address.
+    /// </summary>
     public static EmailAddress Empty => new();
 
+    /// <summary>
+    /// Parse the string representation of an email address to its <see cref="EmailAddress"/> equivalent.
+    /// </summary>
+    /// <param name="s">String value of an email address.</param>
+    /// <param name="provider">An object that supplies culture-specific formatting information about s. If provider is null, the thread current culture is used.</param>
+    /// <returns>Returns EmailAddress object.</returns>
+    /// <exception cref="FormatException"></exception>
     public static EmailAddress Parse(string s, IFormatProvider? provider)
     {
         return TryParse(s, provider, out var result) ? result : throw new FormatException();
     }
 
+    /// <summary>
+    /// Tries to convert the string representation of an email address to its <see cref="EmailAddress"/> equivalent, and returns a value that indicates whether the conversion succeeded.
+    /// </summary>
+    /// <param name="s">A string representing the email address to convert.</param>
+    /// <param name="provider">An object that supplies culture-specific formatting information about s. If provider is null, the thread current culture is used.</param>
+    /// <param name="result"></param>
+    /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out EmailAddress result)
     {
         result = Empty;
@@ -73,24 +115,41 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         else return false;
     }
 
-    public bool IsEmpty() => string.IsNullOrEmpty(_value);
+    /// <summary>
+    /// Indicates that the email address is Empty
+    /// </summary>
+    /// <returns></returns>
+    public readonly bool IsEmpty() => string.IsNullOrEmpty(_value);
 
+    /// <summary>
+    /// Parse the string representation of an email address to its <see cref="EmailAddress"/> equivalent.
+    /// </summary>
+    /// <param name="s">A string representing the email address to convert.</param>
+    /// <returns></returns>
     public static EmailAddress Parse(string s)
         => Parse(s, CultureInfo.InvariantCulture);
 
+    /// <summary>
+    /// Tries to convert the string representation of an email address to its <see cref="EmailAddress"/> equivalent, and returns a value that indicates whether the conversion succeeded.
+    /// </summary>
+    /// <param name="s">A string representing the email address to convert.</param>
+    /// <param name="result"></param>
+    /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out EmailAddress result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
 }
 
-
-internal static class EmailParser
+internal static partial class EmailParser
 {
     public static bool TryParse(string value, out string email)
     {
-        var re = new Regex(@"""?((?<name>.*?)""?\s*<)?(?<email>[^>]*)");
+        var re = EmailRegex();
         var match = re.Match(value);
         email = match.Groups["email"].Value;
 
         return match.Success;
     }
+
+    [GeneratedRegex("\"?((?<name>.*?)\"?\\s*<)?(?<email>[^>]*)")]
+    private static partial Regex EmailRegex();
 }
