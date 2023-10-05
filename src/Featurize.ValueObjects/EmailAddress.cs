@@ -55,15 +55,15 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         {
             return true;
         }
-        else if (!s.Contains('@'))
-        {
-            result = Unknown;
-            return false;
-        }
         else if (s == "?")
         {
             result = Unknown;
             return true;
+        }
+        else if (!s.Contains('@'))
+        {
+            result = Unknown;
+            return false;
         }
         else if (EmailParser.TryParse(s, out string email))
         {
