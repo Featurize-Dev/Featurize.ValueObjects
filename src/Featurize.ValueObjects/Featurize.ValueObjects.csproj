@@ -14,7 +14,19 @@
   </ItemGroup>
 	
   <ItemGroup>
+    <None Remove="Country.csv" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <EmbeddedResource Include="Country.csv" />
+  </ItemGroup>
+	
+  <ItemGroup>
     <Folder Include="Interfaces\" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="30.0.1" />
   </ItemGroup>
 
 </Project>

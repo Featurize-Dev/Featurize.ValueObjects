@@ -5,8 +5,7 @@ using Featurize.ValueObjects.Interfaces;
 
 namespace Featurize.ValueObjects.Converter;
 
-
-public class ValueObjectConverter<T> : JsonConverter<T>
+internal sealed class ValueObjectConverter<T> : JsonConverter<T>
     where T : IValueObject<T>
 {
     public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Featurize.ValueObjects.Converter;
 
-public class EncryptedConverter : JsonConverterFactory
+internal sealed class EncryptedConverter : JsonConverterFactory
 {
     public override bool CanConvert(Type typeToConvert)
             => InnerValue(typeToConvert) is { };

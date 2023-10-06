@@ -8,6 +8,10 @@ using System.Text.Json.Serialization;
 
 namespace Featurize.ValueObjects.Identifiers;
 
+/// <summary>
+/// Represents a Id with a specific behaviour.
+/// </summary>
+/// <typeparam name="TBehavior">The type of the behaviour.</typeparam>
 [DebuggerDisplay("{DebuggerDisplay}")]
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 [JsonConverter(typeof(IdConverter))]
@@ -15,13 +19,26 @@ public record Id<TBehavior> : IValueObject<Id<TBehavior>>
     where TBehavior : IdBehaviour, new()
 {
     private object? _value = null;
-    private static IdBehaviour _behaviour = new TBehavior();
+    private static readonly IdBehaviour _behaviour = new TBehavior();
+    
+    /// <inheritdoc />
     public static Id<TBehavior> Unknown => new() { _value = "?" };
 
+    /// <inheritdoc />
     public static Id<TBehavior> Empty => new();
 
+    /// <summary>
+    /// Generates a new identifier with <typeparamref name="TBehavior"/>.
+    /// </summary>
+    /// <returns>Instance of <see cref="Id{TBehavior}"/>.</returns>
     public static Id<TBehavior> Next() => new() { _value = _behaviour.Next() };
 
+    /// <summary>
+    /// Creates a new instance of <see cref="Id{TBehavior}"/>.
+    /// </summary>
+    /// <param name="id">Object representation of an identifier.</param>
+    /// <returns>Instance of <see cref="Id{TBehavior}"/>.</returns>
+    /// <exception cref="NotSupportedException"></exception>
     public static Id<TBehavior> Create(object id)
     {
         if (_behaviour.Supports(id))
@@ -31,8 +48,7 @@ public record Id<TBehavior> : IValueObject<Id<TBehavior>>
         throw new NotSupportedException();
     }
 
-    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
+    /// <inheritdoc />
     public override string ToString()
     {
         if (this == Unknown) return "?";
@@ -40,14 +56,18 @@ public record Id<TBehavior> : IValueObject<Id<TBehavior>>
         return _behaviour.ToString(_value!);
     }
 
+    /// <inheritdoc />
     public static Id<TBehavior> Parse(string s) => Parse(s, CultureInfo.InvariantCulture);
 
+    /// <inheritdoc />
     public static Id<TBehavior> Parse(string s, IFormatProvider? provider)
-    {
-        return TryParse(s, provider, out var id) ? id : throw new FormatException();
-    }
-    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Id<TBehavior> result) =>
-        TryParse(s, CultureInfo.InvariantCulture, out result);
+        => TryParse(s, provider, out var id) ? id : throw new FormatException();
+
+    /// <inheritdoc />
+    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Id<TBehavior> result) 
+        => TryParse(s, CultureInfo.InvariantCulture, out result);
+
+    /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Id<TBehavior> result)
     {
         result = Empty;
@@ -69,8 +89,10 @@ public record Id<TBehavior> : IValueObject<Id<TBehavior>>
         }
     }
 
+    /// <inheritdoc />
     public bool IsEmpty()
-    {
-        return this == Empty;
-    }
+        => this == Empty;
+
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
 }

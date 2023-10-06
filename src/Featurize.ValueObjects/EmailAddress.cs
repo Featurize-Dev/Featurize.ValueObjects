@@ -1,4 +1,6 @@
-﻿using Featurize.ValueObjects.Interfaces;
+﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Interfaces;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -12,6 +14,7 @@ namespace Featurize.ValueObjects;
 /// Object that represents a EmailAddress.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay}")]
+[TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct EmailAddress() : IValueObject<EmailAddress>
 {
     private string _value = string.Empty;
@@ -49,10 +52,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         }
     }
 
-    /// <summary>
-    /// Returns a string that represents the <see cref="EmailAddress"/>.
-    /// </summary>
-    /// <returns>string value of the email address.</returns>
+    /// <inheritdoc />
     public override readonly string ToString()
     {
         return _value;
@@ -61,35 +61,19 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly string DebuggerDisplay => ToString();
 
-    /// <summary>
-    /// An unkown email address.
-    /// </summary>
+    /// <inheritdoc />
     public static EmailAddress Unknown => new() { _value = "?" };
 
-    /// <summary>
-    /// An Empty email address.
-    /// </summary>
+    /// <inheritdoc />
     public static EmailAddress Empty => new();
 
-    /// <summary>
-    /// Parse the string representation of an email address to its <see cref="EmailAddress"/> equivalent.
-    /// </summary>
-    /// <param name="s">String value of an email address.</param>
-    /// <param name="provider">An object that supplies culture-specific formatting information about s. If provider is null, the thread current culture is used.</param>
-    /// <returns>Returns EmailAddress object.</returns>
-    /// <exception cref="FormatException"></exception>
+    /// <inheritdoc />
     public static EmailAddress Parse(string s, IFormatProvider? provider)
     {
         return TryParse(s, provider, out var result) ? result : throw new FormatException();
     }
 
-    /// <summary>
-    /// Tries to convert the string representation of an email address to its <see cref="EmailAddress"/> equivalent, and returns a value that indicates whether the conversion succeeded.
-    /// </summary>
-    /// <param name="s">A string representing the email address to convert.</param>
-    /// <param name="provider">An object that supplies culture-specific formatting information about s. If provider is null, the thread current culture is used.</param>
-    /// <param name="result"></param>
-    /// <returns>true if s was converted successfully; otherwise, false.</returns>
+    /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out EmailAddress result)
     {
         result = Empty;
@@ -115,26 +99,14 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         else return false;
     }
 
-    /// <summary>
-    /// Indicates that the email address is Empty
-    /// </summary>
-    /// <returns></returns>
+    /// <inheritdoc />
     public readonly bool IsEmpty() => string.IsNullOrEmpty(_value);
 
-    /// <summary>
-    /// Parse the string representation of an email address to its <see cref="EmailAddress"/> equivalent.
-    /// </summary>
-    /// <param name="s">A string representing the email address to convert.</param>
-    /// <returns></returns>
+    /// <inheritdoc />
     public static EmailAddress Parse(string s)
         => Parse(s, CultureInfo.InvariantCulture);
 
-    /// <summary>
-    /// Tries to convert the string representation of an email address to its <see cref="EmailAddress"/> equivalent, and returns a value that indicates whether the conversion succeeded.
-    /// </summary>
-    /// <param name="s">A string representing the email address to convert.</param>
-    /// <param name="result"></param>
-    /// <returns>true if s was converted successfully; otherwise, false.</returns>
+    /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out EmailAddress result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
 }

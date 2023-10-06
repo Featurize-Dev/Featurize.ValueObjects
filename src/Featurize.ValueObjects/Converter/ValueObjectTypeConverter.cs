@@ -4,7 +4,7 @@ using Featurize.ValueObjects.Interfaces;
 
 namespace Featurize.ValueObjects.Converter;
 
-public class ValueObjectTypeConverter<T> : TypeConverter
+internal sealed class ValueObjectTypeConverter<T> : TypeConverter
     where T : IValueObject<T>
 {
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
@@ -15,9 +15,9 @@ public class ValueObjectTypeConverter<T> : TypeConverter
         ? result
         : base.ConvertFrom(context, culture, value);
 }
-public sealed class ValueObjectTypeConverter : TypeConverter
+internal sealed class ValueObjectTypeConverter : TypeConverter
 {
-    private TypeConverter _converter;
+    private readonly TypeConverter _converter;
     public ValueObjectTypeConverter(Type type)
     {
         var converterType = typeof(ValueObjectTypeConverter<>).MakeGenericType(type);
