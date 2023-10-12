@@ -5,9 +5,14 @@ using Featurize.ValueObjects.Interfaces;
 
 namespace Featurize.ValueObjects.Converter;
 
-internal sealed class ValueObjectConverter<T> : JsonConverter<T>
+/// <summary>
+/// A json converter that converts json into a ValueObject
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public sealed class ValueObjectConverter<T> : JsonConverter<T>
     where T : IValueObject<T>
 {
+    /// <inheritdoc />
     public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         try
@@ -21,6 +26,7 @@ internal sealed class ValueObjectConverter<T> : JsonConverter<T>
         }
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value.ToString(), options);

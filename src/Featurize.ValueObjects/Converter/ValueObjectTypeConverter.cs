@@ -15,9 +15,18 @@ internal sealed class ValueObjectTypeConverter<T> : TypeConverter
         ? result
         : base.ConvertFrom(context, culture, value);
 }
-internal sealed class ValueObjectTypeConverter : TypeConverter
+
+/// <summary>
+/// Converts an object to an ValueObject.
+/// </summary>
+public sealed class ValueObjectTypeConverter : TypeConverter
 {
     private readonly TypeConverter _converter;
+
+    /// <summary>
+    /// Constructs a <see cref="ValueObjectTypeConverter"/> for a specific type. 
+    /// </summary>
+    /// <param name="type">The type of the value object.</param>
     public ValueObjectTypeConverter(Type type)
     {
         var converterType = typeof(ValueObjectTypeConverter<>).MakeGenericType(type);
