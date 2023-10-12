@@ -71,14 +71,36 @@ public record Country : IValueObject<Country>
         return ISO3;
     }
 
+    /// <summary>
+    /// Returns a string representing a country
+    /// </summary>
+    /// <param name="format">
+    /// Supported formats
+    /// <list type="bullet">
+    /// <item>
+    /// <description>A3 = ISO 3166 Alpha-3</description>
+    /// </item>
+    /// <item>
+    /// <description>A2 = ISO 3166 Alpha-2</description>
+    /// </item>
+    /// <item>
+    /// <description>N3 = ISO 3166 Num-3</description>
+    /// </item>
+    /// <item>
+    /// <description>N = Name of country</description>
+    /// </item>
+    /// </list>
+    /// </param>
+    /// <returns>String representing a country</returns>
+    /// <exception cref="FormatException"></exception>
     public string ToString(string format)
     {
         return format switch
         {
-            "I3" => ISO3,
-            "I2" => ISO2,
-            "c" => Code,
-            "n" => Name,
+            "A3" => ISO3,
+            "A2" => ISO2,
+            "N3" => Code,
+            "N" => Name,
             _ => throw new FormatException(),
         };
     }
@@ -100,6 +122,11 @@ public record Country : IValueObject<Country>
             return true;
         }
 
+        if (string.IsNullOrEmpty(s))
+        {
+            result = Empty;
+            return true;
+        }
         
         result = CountryLookupTable.All.FirstOrDefault(x => x.ISO3 == s);
         if(result is null)

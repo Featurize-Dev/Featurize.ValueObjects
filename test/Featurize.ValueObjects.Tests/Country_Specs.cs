@@ -1,7 +1,5 @@
-﻿using CsvHelper;
-using CsvHelper.Configuration;
-using FluentAssertions;
-using System.Globalization;
+﻿using FluentAssertions;
+using System.Text.Json;
 
 namespace Featurize.ValueObjects.Tests;
 internal class Country_Specs
@@ -25,6 +23,23 @@ internal class Country_Specs
     }
 
     [Test]
+    public void country_can_be_unknown()
+    {
+        var country = Country.Parse("?");
+
+        country.Should().BeEquivalentTo(Country.Unknown);
+    }
+
+    [Test]
+    public void country_can_be_Empty()
+    {
+        var country = Country.Parse("");
+
+        country.Should().BeEquivalentTo(Country.Empty);
+        country.IsEmpty().Should().BeTrue();
+    }
+
+    [Test]
     [TestCase("I3", "NLD")]
     [TestCase("I2", "NL")]
     [TestCase("c", "528")]
@@ -36,5 +51,25 @@ internal class Country_Specs
         var value = country.ToString(format);
 
         value.Should().Be(expected);
+    }
+
+    [Test]
+    public void can_be_serialized()
+    {
+        var country = Country.Parse("NLD");
+
+        var result = JsonSerializer.Serialize(country);
+
+        result.Should().Be($"\"{country.ISO3}\"");
+    }
+
+    [Test]
+    public void can_be_deserialized()
+    {
+        var country = "\"NLD\"";
+
+        var result = JsonSerializer.Deserialize<Country>(country);
+
+        result.Should().BeEquivalentTo(Country.Parse("NLD"));
     }
 }
