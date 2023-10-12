@@ -40,10 +40,10 @@ internal class Country_Specs
     }
 
     [Test]
-    [TestCase("I3", "NLD")]
-    [TestCase("I2", "NL")]
-    [TestCase("c", "528")]
-    [TestCase("n", "Netherlands")]
+    [TestCase("A3", "NLD")]
+    [TestCase("A2", "NL")]
+    [TestCase("N3", "528")]
+    [TestCase("N", "Netherlands")]
     public void ToString_with_format(string format, string expected)
     {
         var country = Country.Parse("NLD");
