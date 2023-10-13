@@ -15,7 +15,7 @@ namespace Featurize.ValueObjects.Identifiers;
 [DebuggerDisplay("{DebuggerDisplay}")]
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 [JsonConverter(typeof(IdConverter))]
-public record Id<TBehavior> : IValueObject<Id<TBehavior>>
+public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     where TBehavior : IdBehaviour, new()
 {
     private object? _value = null;
