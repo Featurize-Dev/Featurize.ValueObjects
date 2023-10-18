@@ -32,12 +32,16 @@ public sealed class ValueObjectTypeConverter : TypeConverter
         var converterType = typeof(ValueObjectTypeConverter<>).MakeGenericType(type);
         _converter = (TypeConverter)Activator.CreateInstance(converterType)!;
     }
+    
+    /// <inheritdoc />
     public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType)
         => _converter.CanConvertFrom(sourceType);
-
+    
+    /// <inheritdoc />
     public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
         => _converter.ConvertTo(context, culture, value, destinationType);
-
+    
+    /// <inheritdoc />
     public override object? ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         => _converter.ConvertFrom(context, culture, value);
 }

@@ -11,9 +11,9 @@ namespace Featurize.ValueObjects;
 /// <summary>
 /// Object that represents an initial.
 /// </summary>
-[TypeConverter(typeof(ValueObjectTypeConverter<Initials>))]
-[JsonConverter(typeof(ValueObjectConverter<Initials>))]
 [DebuggerDisplay("{DebuggerDisplay}")]
+[JsonConverter(typeof(ValueObjectJsonConverter))]
+[TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct Initials() : IValueObject<Initials>
 {
     private string _value = string.Empty;

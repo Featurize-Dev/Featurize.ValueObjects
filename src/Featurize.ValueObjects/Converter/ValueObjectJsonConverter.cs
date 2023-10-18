@@ -9,7 +9,7 @@ namespace Featurize.ValueObjects.Converter;
 /// A json converter that converts json into a ValueObject
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public sealed class ValueObjectConverter<T> : JsonConverter<T>
+public sealed class ValueObjectJsonConverter<T> : JsonConverter<T>
     where T : IValueObject<T>
 {
     /// <inheritdoc />
@@ -30,5 +30,24 @@ public sealed class ValueObjectConverter<T> : JsonConverter<T>
     public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value.ToString(), options);
+    }
+}
+
+/// <inheritdoc />
+public sealed class ValueObjectJsonConverter : JsonConverterFactory
+{
+    /// <inheritdoc />
+    public override bool CanConvert(Type typeToConvert)
+    {
+        return typeToConvert.GetInterfaces()
+            .Where(x=>x.IsGenericType && x.GetGenericTypeDefinition().Equals(typeof(IValueObject<>)))
+            .Any();
+    }
+
+    /// <inheritdoc />
+    public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
+    {
+        var converterType = typeof(ValueObjectJsonConverter<>).MakeGenericType(typeToConvert);
+        return (JsonConverter)Activator.CreateInstance(converterType)!;
     }
 }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Featurize.ValueObjects;
@@ -14,7 +15,8 @@ namespace Featurize.ValueObjects;
 /// Object that represents a EmailAddress.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay}")]
-[TypeConverter(typeof(ValueObjectTypeConverter))]
+[JsonConverter(typeof(ValueObjectJsonConverter))]
+
 public record struct EmailAddress() : IValueObject<EmailAddress>
 {
     private string _value = string.Empty;

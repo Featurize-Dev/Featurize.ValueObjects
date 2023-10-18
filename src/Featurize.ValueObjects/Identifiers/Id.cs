@@ -13,8 +13,8 @@ namespace Featurize.ValueObjects.Identifiers;
 /// </summary>
 /// <typeparam name="TBehavior">The type of the behaviour.</typeparam>
 [DebuggerDisplay("{DebuggerDisplay}")]
-[TypeConverter(typeof(ValueObjectTypeConverter))]
 [JsonConverter(typeof(IdConverter))]
+[TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     where TBehavior : IdBehaviour, new()
 {
@@ -49,7 +49,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     }
 
     /// <inheritdoc />
-    public override string ToString()
+    public override readonly string ToString()
     {
         if (this == Unknown) return "?";
         if (this == Empty) return string.Empty;
@@ -90,9 +90,9 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     }
 
     /// <inheritdoc />
-    public bool IsEmpty()
+    public readonly bool IsEmpty()
         => this == Empty;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
 }

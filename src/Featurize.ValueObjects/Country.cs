@@ -15,15 +15,12 @@ namespace Featurize.ValueObjects;
 /// <summary>
 /// Represents a Country.
 /// </summary>
-[System.ComponentModel.TypeConverter(typeof(ValueObjectTypeConverter))]
-[JsonConverter(typeof(ValueObjectConverter<Country>))]
 [DebuggerDisplay("{DebuggerDisplay}")]
-public record Country : IValueObject<Country>
+[JsonConverter(typeof(ValueObjectJsonConverter))]
+public record struct Country() : IValueObject<Country>
 {
     private string _value = string.Empty;
     private CountryRecord _countryRecord = new();
-
-    private Country() { }
 
     /// <summary>
     /// Unknown country.
@@ -38,35 +35,35 @@ public record Country : IValueObject<Country>
     /// <summary>
     /// Name of the country
     /// </summary>
-    public string Name => _countryRecord.Name;
+    public readonly string Name => _countryRecord.Name;
 
     /// <summary>
     /// ISO 3166 Alpha-2 representation of a country.
     /// </summary>
-    public string ISO2 => _countryRecord.ISO2;
+    public readonly string ISO2 => _countryRecord.ISO2;
     
     /// <summary>
     /// ISO 3166 Alpha-3 representation of a country.
     /// </summary>
-    public string ISO3 => _countryRecord.ISO3;
+    public readonly string ISO3 => _countryRecord.ISO3;
 
     /// <summary>
     /// ISO 3166 Numeric-3 representation of a country.
     /// </summary>
-    public string Code => _countryRecord.Code;
+    public readonly string Code => _countryRecord.Code;
 
     /// <summary>
     /// The region of the country.
     /// </summary>
-    public string Region => _countryRecord.Region;
+    public readonly string Region => _countryRecord.Region;
 
     /// <summary>
     /// The sub region of the country.
     /// </summary>
-    public string SubRegion => _countryRecord.SubRegion;
+    public readonly string SubRegion => _countryRecord.SubRegion;
     
     /// <inheritdoc />
-    public override string ToString()
+    public override readonly string ToString()
     {
         return ISO3;
     }
@@ -93,17 +90,14 @@ public record Country : IValueObject<Country>
     /// </param>
     /// <returns>String representing a country</returns>
     /// <exception cref="FormatException"></exception>
-    public string ToString(string format)
+    public readonly string ToString(string format) => format switch
     {
-        return format switch
-        {
-            "A3" => ISO3,
-            "A2" => ISO2,
-            "N3" => Code,
-            "N" => Name,
-            _ => throw new FormatException(),
-        };
-    }
+        "A3" => ISO3,
+        "A2" => ISO2,
+        "N3" => Code,
+        "N" => Name,
+        _ => throw new FormatException(),
+    };
 
     /// <inheritdoc />
     public static Country Parse(string s, IFormatProvider? provider)
@@ -129,7 +123,7 @@ public record Country : IValueObject<Country>
         }
         
         result = CountryLookupTable.All.FirstOrDefault(x => x.ISO3 == s);
-        if(result is null)
+        if(result == Empty)
         {
             result = Unknown;
             return false;
@@ -143,7 +137,7 @@ public record Country : IValueObject<Country>
         => TryParse(s, CultureInfo.CurrentCulture, out result);
 
     /// <inheritdoc />
-    public bool IsEmpty() => _value == string.Empty;
+    public readonly bool IsEmpty() => _value == string.Empty;
 
     internal static Country Create(CountryRecord record)
     {
@@ -160,7 +154,7 @@ public record Country : IValueObject<Country>
     public static IEnumerable<Country> All => CountryLookupTable.All;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => IsEmpty() ? "{empty}" : $"{Name} ({ISO3})";
+    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : $"{Name} ({ISO3})";
 }
 
 

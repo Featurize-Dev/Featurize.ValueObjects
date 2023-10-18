@@ -5,6 +5,13 @@ using System.Text.Json;
 
 namespace Featurize.ValueObjects.Tests;
 
+using TestId = Id<HydoBehaviour>;
+
+public class IdentifierClass
+{
+    public TestId TestId { get; set; }
+}
+
 public class HydoBehaviour : HidBehaviour
 {
     //public override string Name => "TEST";
@@ -81,5 +88,17 @@ public class Identifier_Specs
 
             id.Should().Be(original);
         }
+
+        [Test]
+        public void class_member_should_serialize()
+        {
+            var original = new IdentifierClass { TestId = TestId.Next() };
+            var result = JsonSerializer.Serialize(original);
+
+            var id = JsonSerializer.Deserialize<IdentifierClass>(result);
+
+            id.Should().BeEquivalentTo(original);
+        }
     }
 }
+

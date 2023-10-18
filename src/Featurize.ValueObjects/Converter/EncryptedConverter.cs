@@ -12,7 +12,7 @@ internal sealed class EncryptedConverter : JsonConverterFactory
 
     public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
     => InnerValue(typeToConvert) is { }
-        ? (JsonConverter?)Activator.CreateInstance(typeof(ValueObjectConverter<>).MakeGenericType(typeToConvert))
+        ? (JsonConverter?)Activator.CreateInstance(typeof(ValueObjectJsonConverter<>).MakeGenericType(typeToConvert))
         : null;
 
     private static Type? InnerValue(Type type)

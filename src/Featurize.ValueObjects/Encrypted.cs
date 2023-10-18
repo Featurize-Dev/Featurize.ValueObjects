@@ -15,10 +15,10 @@ namespace Featurize.ValueObjects;
 /// Represents an encrypted value of T.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-[TypeConverter(typeof(ValueObjectTypeConverter))]
-[JsonConverter(typeof(EncryptedConverter))]
 [DebuggerDisplay("{DebuggerDisplay}")]
-public record Encrypted<T> : IValueObject<Encrypted<T>>
+[JsonConverter(typeof(EncryptedConverter))]
+[TypeConverter(typeof(ValueObjectTypeConverter))]
+public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
 {
     private static readonly byte[] _unknown = Encoding.UTF8.GetBytes("?");
 
@@ -35,7 +35,7 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
     public static Encrypted<T> Empty => new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
 
     /// <summary>
     /// Creates an new instance of <see cref="Encrypted{T}"/>.
@@ -63,7 +63,7 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
     /// <param name="decryptor">The Decryption to use.</param>
     /// <param name="converter">The TypeConverter to use.</param>
     /// <returns>Returns the original value if Decrypted successfull otherwise Null.</returns>
-    public T? Decrypt(ICryptoTransform decryptor, TypeConverter? converter = null)
+    public readonly T? Decrypt(ICryptoTransform decryptor, TypeConverter? converter = null)
     {
         converter ??= TypeDescriptor.GetConverter(typeof(T));
 
@@ -103,7 +103,7 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
     /// Returns a base64 string that represents the encrypted value.
     /// </summary>
     /// <returns></returns>
-    public override string ToString()
+    public override readonly string ToString()
     {
         return Convert.ToBase64String(_value);
     }
@@ -163,5 +163,5 @@ public record Encrypted<T> : IValueObject<Encrypted<T>>
     /// Indicates that the <see cref="Encrypted{T}"/> is Empty
     /// </summary>
     /// <returns>true if Empty.</returns>
-    public bool IsEmpty() => this == Empty;
+    public readonly bool IsEmpty() => this == Empty;
 }
