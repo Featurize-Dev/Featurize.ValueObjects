@@ -11,7 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{810AD51B-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.ValueObjects.Tests", "test\Featurize.ValueObjects.Tests\Featurize.ValueObjects.Tests.csproj", "{88FB4BA2-0E3F-4F6A-A8E6-92A042DC3223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Featurize.ValueObjects.MongoDB", "src\Featurize.ValueObjects.MongoDB\Featurize.ValueObjects.MongoDB.csproj", "{3ECB008E-5A7F-4E8F-9CAA-C639343B1CC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Featurize.ValueObjects.MongoDB", "src\Featurize.ValueObjects.MongoDB\Featurize.ValueObjects.MongoDB.csproj", "{3ECB008E-5A7F-4E8F-9CAA-C639343B1CC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{EBF155F2-85DB-4A85-B8AE-10CE08AB6CBB}"
+	ProjectSection(SolutionItems) = preProject
+		props\common.props = props\common.props
+		props\package.props = props\package.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
