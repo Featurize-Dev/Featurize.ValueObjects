@@ -136,8 +136,6 @@ public record struct Country() : IValueObject<Country>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Country result)
         => TryParse(s, CultureInfo.CurrentCulture, out result);
 
-    /// <inheritdoc />
-    public readonly bool IsEmpty() => _value == string.Empty;
 
     internal static Country Create(CountryRecord record)
     {
@@ -154,7 +152,7 @@ public record struct Country() : IValueObject<Country>
     public static IEnumerable<Country> All => CountryLookupTable.All;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : $"{Name} ({ISO3})";
+    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : $"{Name} ({ISO3})";
 }
 
 

@@ -12,9 +12,4 @@ public interface IEmpty<TSelf>
     /// </summary>
     public static abstract TSelf Empty { get; }
 
-    /// <summary>
-    /// Checks if the <typeparamref name="TSelf"/> is empty.
-    /// </summary>
-    /// <returns>returns true if empty.</returns>
-    public bool IsEmpty();
 }

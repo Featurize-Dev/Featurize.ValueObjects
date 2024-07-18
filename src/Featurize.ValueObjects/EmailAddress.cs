@@ -102,9 +102,6 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     }
 
     /// <inheritdoc />
-    public readonly bool IsEmpty() => string.IsNullOrEmpty(_value);
-
-    /// <inheritdoc />
     public static EmailAddress Parse(string s)
         => Parse(s, CultureInfo.InvariantCulture);
 

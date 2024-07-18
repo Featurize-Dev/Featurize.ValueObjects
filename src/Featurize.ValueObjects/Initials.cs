@@ -34,7 +34,7 @@ public record struct Initials() : IValueObject<Initials>
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : ToString();
 
     /// <summary>
     /// An unknown <see cref="Initials"/>.
@@ -44,12 +44,6 @@ public record struct Initials() : IValueObject<Initials>
     /// An empty <see cref="Initials"/>.
     /// </summary>
     public static Initials Empty => new();
-
-    /// <summary>
-    /// Indicates that the initials are Empty.
-    /// </summary>
-    /// <returns>true if initials are empty.</returns>
-    public readonly bool IsEmpty() => this == Empty;
 
     /// <summary>
     /// Parse the string representation of initials to its <see cref="Initials"/> equivalent.

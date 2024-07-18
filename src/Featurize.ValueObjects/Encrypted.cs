@@ -35,7 +35,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     public static Encrypted<T> Empty => new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : ToString();
 
     /// <summary>
     /// Creates an new instance of <see cref="Encrypted{T}"/>.
@@ -158,10 +158,4 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         result = new() { _value = Convert.FromBase64String(s) };
         return true;
     }
-
-    /// <summary>
-    /// Indicates that the <see cref="Encrypted{T}"/> is Empty
-    /// </summary>
-    /// <returns>true if Empty.</returns>
-    public readonly bool IsEmpty() => this == Empty;
 }
