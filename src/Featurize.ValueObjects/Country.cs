@@ -25,7 +25,7 @@ public record struct Country() : IValueObject<Country>
     /// <summary>
     /// Unknown country.
     /// </summary>
-    public static Country Unknown => new() { _value = "?" };
+    public static Country Unknown => new() { _value = ValueObject.Unknown };
 
     /// <summary>
     /// Empty country object.
@@ -111,7 +111,7 @@ public record struct Country() : IValueObject<Country>
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Country result)
     {
         result = Unknown;
-        if (s == "?")
+        if (s == ValueObject.Unknown)
         {
             return true;
         }

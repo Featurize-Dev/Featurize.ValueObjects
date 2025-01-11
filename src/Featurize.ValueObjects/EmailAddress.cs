@@ -16,7 +16,7 @@ namespace Featurize.ValueObjects;
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay}")]
 [JsonConverter(typeof(ValueObjectJsonConverter))]
-
+[TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct EmailAddress() : IValueObject<EmailAddress>
 {
     private string _value = string.Empty;
@@ -64,7 +64,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     private readonly string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
-    public static EmailAddress Unknown => new() { _value = "?" };
+    public static EmailAddress Unknown => new() { _value = ValueObject.Unknown };
 
     /// <inheritdoc />
     public static EmailAddress Empty => new();
@@ -83,7 +83,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         {
             return true;
         }
-        else if (s == "?")
+        else if (s == ValueObject.Unknown)
         {
             result = Unknown;
             return true;
