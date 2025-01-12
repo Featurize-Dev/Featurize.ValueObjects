@@ -22,7 +22,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     private static readonly IdBehaviour _behaviour = new TBehavior();
     
     /// <inheritdoc />
-    public static Id<TBehavior> Unknown => new() { _value = ValueObject.Unknown };
+    public static Id<TBehavior> Unknown => new() { _value = ValueObject.UnknownValue };
 
     /// <inheritdoc />
     public static Id<TBehavior> Empty => new();
@@ -51,7 +51,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     /// <inheritdoc />
     public override readonly string ToString()
     {
-        if (this == Unknown) return ValueObject.Unknown;
+        if (this == Unknown) return ValueObject.UnknownValue;
         if (this == Empty) return string.Empty;
         return _behaviour.ToString(_value!);
     }

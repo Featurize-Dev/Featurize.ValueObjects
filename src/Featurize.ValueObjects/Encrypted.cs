@@ -20,7 +20,7 @@ namespace Featurize.ValueObjects;
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
 {
-    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(ValueObject.Unknown);
+    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(ValueObject.UnknownValue);
 
     private byte[] _value = Array.Empty<byte>();
     
@@ -71,7 +71,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         {
             try
             {
-                return converter.ConvertFromString(ValueObject.Unknown) is { } unknown
+                return converter.ConvertFromString(ValueObject.UnknownValue) is { } unknown
                    ? (T?)unknown
                    : default;
             }
@@ -149,7 +149,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         {
             return true;
         }
-        if (s == ValueObject.Unknown)
+        if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

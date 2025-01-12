@@ -11,7 +11,7 @@ public class PeriodicTable_tests
         {
             var result = PeriodicTable.TryParse("Fe", out var element);
             Assert.True(result);
-            Assert.AreEqual(element, PeriodicTable.Iron);
+            Assert.That(PeriodicTable.Iron, Is.EqualTo(element));
         }
     }
 }

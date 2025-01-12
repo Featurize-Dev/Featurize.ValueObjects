@@ -64,7 +64,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     private readonly string DebuggerDisplay => ToString();
 
     /// <inheritdoc />
-    public static EmailAddress Unknown => new() { _value = ValueObject.Unknown };
+    public static EmailAddress Unknown => new() { _value = ValueObject.UnknownValue };
 
     /// <inheritdoc />
     public static EmailAddress Empty => new();
@@ -83,7 +83,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         {
             return true;
         }
-        else if (s == ValueObject.Unknown)
+        else if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

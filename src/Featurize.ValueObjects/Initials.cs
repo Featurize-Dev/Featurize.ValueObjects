@@ -39,7 +39,7 @@ public record struct Initials() : IValueObject<Initials>
     /// <summary>
     /// An unknown <see cref="Initials"/>.
     /// </summary>
-    public static Initials Unknown => new() { _value = ValueObject.Unknown };
+    public static Initials Unknown => new() { _value = ValueObject.UnknownValue };
     /// <summary>
     /// An empty <see cref="Initials"/>.
     /// </summary>
