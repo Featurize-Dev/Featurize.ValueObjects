@@ -71,7 +71,7 @@ public record struct Initials() : IValueObject<Initials>
         {
             return true;
         }
-        else if ("?" == s)
+        if ("?" == s)
         {
             result = Unknown;
             return true;
