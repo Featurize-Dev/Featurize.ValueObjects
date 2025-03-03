@@ -55,7 +55,10 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     }
 
     /// <inheritdoc />
-    public override readonly string ToString()
+    public override string ToString() => ToString(null, null);
+
+    /// <inheritdoc />
+    public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null)
     {
         return _value;
     }
@@ -108,6 +111,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out EmailAddress result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
+
 }
 
 internal static partial class EmailParser

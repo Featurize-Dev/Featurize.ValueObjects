@@ -23,7 +23,7 @@ public class Initialls_Specs
         [TestCase("232323", ExpectedResult = "?")]
         public string should_return_valid_initals(string json)
         {
-            return JsonSerializer.Deserialize<Initials>(json).ToString();
+            return JsonSerializer.Deserialize<Initials>(json);
         }
     }
 
@@ -35,7 +35,7 @@ public class Initialls_Specs
         [TestCase("?", ExpectedResult = "?")]
         public string should_return_valid_initials(string value)
         {
-            return Initials.Parse(value).ToString();
+            return Initials.Parse(value);
         }
     }
 

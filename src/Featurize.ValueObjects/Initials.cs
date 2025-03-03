@@ -24,11 +24,14 @@ public record struct Initials() : IValueObject<Initials>
     /// </summary>
     public readonly int Length => _value.Count(ch => ch == _dot);
 
+    /// <inheritdoc />
+    public override string ToString() => ToString(null, null);
+
     /// <summary>
     /// Returns a string that represents the <see cref="Initials"/>.
     /// </summary>
     /// <returns>string value of the <see cref="Initials"/>.</returns>
-    public readonly override string ToString()
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
         return _value;
     }
@@ -116,4 +119,10 @@ public record struct Initials() : IValueObject<Initials>
     {
         return TryParse(string.Join("", names.Split(' ').Select(s => s.First())), out var results) ? results : Empty;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="initials"></param>
+    public static implicit operator string(Initials initials) => initials.ToString(null, null);
 }

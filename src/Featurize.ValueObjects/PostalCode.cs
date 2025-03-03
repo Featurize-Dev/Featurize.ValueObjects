@@ -135,18 +135,27 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     public readonly bool TryChangeFormat(IFormatProvider provider, out Postcode result) =>
         TryParse(_value, provider, out result);
 
-    /// <summary>
-    ///     Returns a string representation of the postal code.
-    /// </summary>
-    /// <returns>A string representation of the postal code.</returns>
-    public override readonly string ToString() => ToString(null);
+    /// <inheritdoc />
+    public override string ToString() => ToString(null, null);
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="format"></param>
+    /// <param name="formatProvider"></param>
     /// <returns></returns>
-    public readonly string ToString(PostcodeStringFormat? format) => PostcodeFormatInfo.FindByName(_formatName).ToString(_value, format);
+    public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null)
+    {
+        var formatter = formatProvider == null ? Format : PostcodeFormatInfo.GetInstance(formatProvider);
+
+        var f = format switch
+        {
+            "C" => PostcodeStringFormat.Compact,
+            _ => PostcodeStringFormat.Official,
+        };
+
+        return formatter.ToString(_value, f);
+    }
 
     /// <summary>
     ///     Determines whether a specified string is equal to the value of the postal code.

@@ -61,12 +61,9 @@ public record struct Country() : IValueObject<Country>
     /// The sub region of the country.
     /// </summary>
     public readonly string SubRegion => _countryRecord.SubRegion;
-    
+
     /// <inheritdoc />
-    public override readonly string ToString()
-    {
-        return ISO3;
-    }
+    public override string ToString() => ToString(null, null);
 
     /// <summary>
     /// Returns a string representing a country
@@ -88,16 +85,17 @@ public record struct Country() : IValueObject<Country>
     /// </item>
     /// </list>
     /// </param>
+    /// <param name="formatProvider"></param>
     /// <returns>String representing a country</returns>
-    /// <exception cref="FormatException"></exception>
-    public readonly string ToString(string format) => format switch
-    {
-        "A3" => ISO3,
-        "A2" => ISO2,
-        "N3" => Code,
-        "N" => Name,
-        _ => throw new FormatException(),
-    };
+    public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null) => format switch
+        {
+            "A3" => ISO3,
+            "A2" => ISO2,
+            "N3" => Code,
+            "N" => Name,
+            _ => ISO3
+        };
+
 
     /// <inheritdoc />
     public static Country Parse(string s, IFormatProvider? provider)

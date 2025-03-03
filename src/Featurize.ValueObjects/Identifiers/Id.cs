@@ -1,4 +1,5 @@
 ﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Formatting;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -49,7 +50,10 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     }
 
     /// <inheritdoc />
-    public override readonly string ToString()
+    public override string ToString() => ToString(null, null);
+
+    /// <inheritdoc />
+    public readonly string ToString([StringSyntax(nameof(PostcodeStringFormat))]string? format = null, IFormatProvider? formatProvider = null)
     {
         if (this == Unknown) return "?";
         if (this == Empty) return string.Empty;
