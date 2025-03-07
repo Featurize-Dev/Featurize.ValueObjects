@@ -64,10 +64,10 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => ToString();
+    private readonly string DebuggerDisplay => this.DebuggerDisplay();
 
     /// <inheritdoc />
-    public static EmailAddress Unknown => new() { _value = "?" };
+    public static EmailAddress Unknown => new() { _value = Constants.UnknownValue };
 
     /// <inheritdoc />
     public static EmailAddress Empty => new();
@@ -86,7 +86,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         {
             return true;
         }
-        else if (s == "?")
+        else if (s == Constants.UnknownValue)
         {
             result = Unknown;
             return true;

@@ -25,7 +25,7 @@ public record struct Country() : IValueObject<Country>
     /// <summary>
     /// Unknown country.
     /// </summary>
-    public static Country Unknown => new() { _value = "?" };
+    public static Country Unknown => new() { _value = Constants.UnknownValue };
 
     /// <summary>
     /// Empty country object.
@@ -109,7 +109,7 @@ public record struct Country() : IValueObject<Country>
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Country result)
     {
         result = Unknown;
-        if (s == "?")
+        if (s == Constants.UnknownValue)
         {
             return true;
         }
@@ -150,7 +150,7 @@ public record struct Country() : IValueObject<Country>
     public static IEnumerable<Country> All => CountryLookupTable.All;
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : $"{Name} ({ISO3})";
+    private readonly string DebuggerDisplay => this.DebuggerDisplay(x => $"{x.Name} ({x.ISO3})");
 }
 
 

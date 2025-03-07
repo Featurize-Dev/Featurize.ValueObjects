@@ -2,21 +2,21 @@
 
 namespace Featurize.ValueObjects.Formatting;
 
-internal partial class DutchPostcodeInfo() : PostcodeFormatInfo("NL")
+internal partial class DutchPostalCodeInfo() : PostalCodeFormatInfo("NL")
 {
     [GeneratedRegex(@"^(\d{4})((?![Ss][AaDdSs])[A-Za-z]{2})$")]
     private static partial Regex PostcodeRegex();
 
-    public override bool TryParse(string s, out Postcode result)
+    public override bool TryParse(string s, out PostalCode result)
     {
         var matchResult = GetMatchedResult(s);
         if (!matchResult.Success)
         {
-            result = Postcode.Unknown;
+            result = PostalCode.Unknown;
             return false;
         }
 
-        result = Postcode.Create(s, this);
+        result = PostalCode.Create(s, this);
         return true;
     }
 

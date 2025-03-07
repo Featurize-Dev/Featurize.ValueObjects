@@ -1,10 +1,8 @@
 ﻿using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Formatting;
 using Featurize.ValueObjects.Interfaces;
-using Microsoft.VisualBasic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
@@ -18,57 +16,57 @@ namespace Featurize.ValueObjects;
 [DebuggerDisplay("{DebuggerDisplay}")]
 [JsonConverter(typeof(ValueObjectJsonConverter))]
 [TypeConverter(typeof(ValueObjectTypeConverter))]
-public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
+public record struct PostalCode() : IValueObject<PostalCode>, IUnknown<PostalCode>
 {
-    private string _formatName = PostcodeFormatInfo.Unknown.Name;
+    private string _formatName = PostalCodeFormatInfo.Unknown.Name;
     private string _value = string.Empty;
 
     /// <summary>
     ///     Gets the format information for the current postal code.
     /// </summary>
-    public readonly PostcodeFormatInfo Format => PostcodeFormatInfo.FindByName(_formatName);
+    public readonly PostalCodeFormatInfo Format => PostalCodeFormatInfo.FindByName(_formatName);
 
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay =>
-        this == Empty ? "{EMPTY}" : $"{ToString()}; {_formatName}";
+    private readonly string DebuggerDisplay => 
+        this.DebuggerDisplay(x => $"{x.ToString()}: {x._formatName}");
 
     /// <summary>
     ///     Gets an unknown postal code.
     /// </summary>
-    public static Postcode Unknown => new()
+    public static PostalCode Unknown => new()
     {
-        _value = "?",
-        _formatName = PostcodeFormatInfo.Unknown.Name
+        _value = Constants.UnknownValue,
+        _formatName = PostalCodeFormatInfo.Unknown.Name
     };
 
     /// <summary>
     ///     Gets an empty postal code.
     /// </summary>
-    public static Postcode Empty => new();
+    public static PostalCode Empty => new();
 
     /// <summary>
-    ///     Parses the specified string to a <see cref="Postcode" /> using the provided format provider.
+    ///     Parses the specified string to a <see cref="PostalCode" /> using the provided format provider.
     /// </summary>
     /// <param name="s">The string representation of a postal code.</param>
     /// <param name="provider">An object that provides culture-specific formatting information.</param>
-    /// <returns>A <see cref="Postcode" /> parsed from the input string.</returns>
+    /// <returns>A <see cref="PostalCode" /> parsed from the input string.</returns>
     /// <exception cref="FormatException">Thrown when the string is not a valid postal code.</exception>
-    public static Postcode Parse(string s, IFormatProvider? provider) =>
+    public static PostalCode Parse(string s, IFormatProvider? provider) =>
         TryParse(s, provider, out var result) ? result : throw new FormatException($"'{s}' is not a valid postalcode.");
 
     /// <summary>
-    ///     Tries to parse the specified string to a <see cref="Postcode" /> using the provided format provider.
+    ///     Tries to parse the specified string to a <see cref="PostalCode" /> using the provided format provider.
     /// </summary>
     /// <param name="s">The string representation of a postal code.</param>
     /// <param name="provider">An object that provides culture-specific formatting information.</param>
     /// <param name="result">
-    ///     When this method returns, contains the parsed <see cref="Postcode" /> if successful, or
+    ///     When this method returns, contains the parsed <see cref="PostalCode" /> if successful, or
     ///     <see cref="Empty" /> if failed.
     /// </param>
     /// <returns><c>true</c> if the parsing was successful; otherwise, <c>false</c>.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public static bool TryParse(string? s, IFormatProvider? provider, out Postcode result)
+    public static bool TryParse(string? s, IFormatProvider? provider, out PostalCode result)
     {
         if (string.IsNullOrEmpty(s))
         {
@@ -76,13 +74,13 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
             return false;
         }
 
-        if (s.Equals("?"))
+        if (s == Constants.UnknownValue)
         {
             result = Unknown;
             return false;
         }
 
-        var formatInfo = PostcodeFormatInfo.GetInstance(provider);
+        var formatInfo = PostalCodeFormatInfo.GetInstance(provider);
         return formatInfo.TryParse(s, out result);
     }
 
@@ -92,25 +90,25 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     public static CultureInfo DefaultCulture => CultureInfo.InvariantCulture;
 
     /// <summary>
-    ///     Parses the specified string to a <see cref="Postcode" /> using the default culture.
+    ///     Parses the specified string to a <see cref="PostalCode" /> using the default culture.
     /// </summary>
     /// <param name="s">The string representation of a postal code.</param>
-    /// <returns>A <see cref="Postcode" /> parsed from the input string.</returns>
-    public static Postcode Parse(string s) => Parse(s, null);
+    /// <returns>A <see cref="PostalCode" /> parsed from the input string.</returns>
+    public static PostalCode Parse(string s) => Parse(s, null);
 
     /// <summary>
-    ///     Tries to parse the specified string to a <see cref="Postcode" /> using the default culture.
+    ///     Tries to parse the specified string to a <see cref="PostalCode" /> using the default culture.
     /// </summary>
     /// <param name="s">The string representation of a postal code.</param>
     /// <param name="result">
-    ///     When this method returns, contains the parsed <see cref="Postcode" /> if successful, or
+    ///     When this method returns, contains the parsed <see cref="PostalCode" /> if successful, or
     ///     <see cref="Empty" /> if failed.
     /// </param>
     /// <returns><c>true</c> if the parsing was successful; otherwise, <c>false</c>.</returns>
     /// <exception cref="NotImplementedException"></exception>
-    public static bool TryParse(string? s, out Postcode result) => TryParse(s, null, out result);
+    public static bool TryParse(string? s, out PostalCode result) => TryParse(s, null, out result);
 
-    internal static Postcode Create(string value, PostcodeFormatInfo info) => new()
+    internal static PostalCode Create(string value, PostalCodeFormatInfo info) => new()
     {
         _value = value,
         _formatName = info.Name
@@ -120,8 +118,8 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     ///     Changes the format of the postal code using the specified format provider.
     /// </summary>
     /// <param name="provider">An object that provides culture-specific formatting information.</param>
-    /// <returns>A new <see cref="Postcode" /> with the updated format.</returns>
-    public readonly Postcode ChangeFormat(IFormatProvider provider) => Parse(_value, provider);
+    /// <returns>A new <see cref="PostalCode" /> with the updated format.</returns>
+    public readonly PostalCode ChangeFormat(IFormatProvider provider) => Parse(_value, provider);
 
     /// <summary>
     ///     Tries to change the format of the postal code using the specified format provider.
@@ -132,11 +130,11 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     ///     otherwise, the unchanged postal code.
     /// </param>
     /// <returns><c>true</c> if the format was successfully changed; otherwise, <c>false</c>.</returns>
-    public readonly bool TryChangeFormat(IFormatProvider provider, out Postcode result) =>
+    public readonly bool TryChangeFormat(IFormatProvider provider, out PostalCode result) =>
         TryParse(_value, provider, out result);
 
     /// <inheritdoc />
-    public override string ToString() => ToString(null, null);
+    public override readonly string ToString() => ToString(null, null);
 
     /// <summary>
     /// 
@@ -146,7 +144,7 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     /// <returns></returns>
     public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null)
     {
-        var formatter = formatProvider == null ? Format : PostcodeFormatInfo.GetInstance(formatProvider);
+        var formatter = formatProvider == null ? Format : PostalCodeFormatInfo.GetInstance(formatProvider);
 
         var f = format switch
         {
@@ -154,7 +152,12 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
             _ => PostcodeStringFormat.Official,
         };
 
-        return formatter.ToString(_value, f);
+        if(formatter.Name != Format.Name)
+        {
+            return Parse(_value, formatter).ToString(format);
+        }
+
+        return formatter.ToString(_value, f);        
     }
 
     /// <summary>
@@ -163,7 +166,7 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     /// <param name="left">The string to compare with the postal code.</param>
     /// <param name="right">The postal code to compare.</param>
     /// <returns><c>true</c> if the string is equal to the postal code; otherwise, <c>false</c>.</returns>
-    public static bool operator ==(string left, Postcode right) => left == right._value;
+    public static bool operator ==(string left, PostalCode right) => left == right._value;
 
     /// <summary>
     ///     Determines whether a specified string is not equal to the value of the postal code.
@@ -171,7 +174,7 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     /// <param name="left">The string to compare with the postal code.</param>
     /// <param name="right">The postal code to compare.</param>
     /// <returns><c>true</c> if the string is not equal to the postal code; otherwise, <c>false</c>.</returns>
-    public static bool operator !=(string left, Postcode right) => !(left == right);
+    public static bool operator !=(string left, PostalCode right) => !(left == right);
 
     /// <summary>
     ///     Determines whether the value of the postal code is equal to a specified string.
@@ -179,7 +182,7 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     /// <param name="left">The postal code to compare.</param>
     /// <param name="right">The string to compare with the postal code.</param>
     /// <returns><c>true</c> if the postal code is equal to the string; otherwise, <c>false</c>.</returns>
-    public static bool operator ==(Postcode left, string right) => left._value == right;
+    public static bool operator ==(PostalCode left, string right) => left._value == right;
 
     /// <summary>
     ///     Determines whether the value of the postal code is not equal to a specified string.
@@ -187,5 +190,17 @@ public record struct Postcode() : IValueObject<Postcode>, IUnknown<Postcode>
     /// <param name="left">The postal code to compare.</param>
     /// <param name="right">The string to compare with the postal code.</param>
     /// <returns><c>true</c> if the postal code is not equal to the string; otherwise, <c>false</c>.</returns>
-    public static bool operator !=(Postcode left, string right) => !(left == right);
+    public static bool operator !=(PostalCode left, string right) => !(left == right);
+
+    /// <summary>
+    ///     Converts a postalcode to a string.
+    /// </summary>
+    /// <param name="value">The postal code to cenvert</param>
+    public static implicit operator string(PostalCode value) => value.ToString();
+
+    /// <summary>
+    ///     Converts a string to a postalcode.
+    /// </summary>
+    /// <param name="s"></param>
+    public static explicit operator PostalCode(string s) => PostalCode.Parse(s);
 }

@@ -1,10 +1,10 @@
 ﻿namespace Featurize.ValueObjects.Formatting;
 
-internal class UnknownPostcodeInfo() : PostcodeFormatInfo("Unknown")
+internal class UnknownPostalCodeInfo() : PostalCodeFormatInfo("Unknown")
 {
-    public override bool TryParse(string s, out Postcode result)
+    public override bool TryParse(string s, out PostalCode result)
     {
-        result = Postcode.Create(s, this);
+        result = PostalCode.Create(s, this);
         return true;
     }
 

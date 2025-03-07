@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ public class Postcode_Tests
         [Test]
         public void Should_Be_Equal()
         {
-            var p1 = Postcode.Parse("1234 AB");
+            var p1 = PostalCode.Parse("1234 AB");
             ("1234 AB" == p1).Should().BeTrue();
             (p1 == "1234 AB").Should().BeTrue();
         }
@@ -39,7 +40,7 @@ public class Postcode_Tests
         [Test]
         public void Should_Not_Be_Equal()
         {
-            var p1 = Postcode.Parse("1235 AB");
+            var p1 = PostalCode.Parse("1235 AB");
             ("1234 AB" != p1).Should().BeTrue();
             (p1 != "1234 AB").Should().BeTrue();
         }
@@ -50,7 +51,7 @@ public class Postcode_Tests
         [Test]
         public void Should_Return_WithoutSpaces()
         {
-            var postcode = Postcode.Parse("1234 AB", PostcodeFormatInfo.NL);
+            var postcode = PostalCode.Parse("1234 AB", PostalCodeFormatInfo.NL);
             var toString = postcode.ToString("C");
             toString.Should().Be("1234AB");
         }
@@ -58,7 +59,7 @@ public class Postcode_Tests
         [Test]
         public void Should_Return_Dutch_Postcode_With_Spaces()
         {
-            var postcode = Postcode.Parse("1234 AB", PostcodeFormatInfo.NL);
+            var postcode = PostalCode.Parse("1234 AB", PostalCodeFormatInfo.NL);
             var toString = postcode.ToString();
             toString.Should().Be("1234 AB");
         }
@@ -66,7 +67,7 @@ public class Postcode_Tests
         [Test]
         public void Should_Return_Unknown_Postcode_Without_Spaces()
         {
-            var postcode = Postcode.Parse("HA3 0JA", PostcodeFormatInfo.Unknown);
+            var postcode = PostalCode.Parse("HA3 0JA", PostalCodeFormatInfo.Unknown);
             var toString = postcode.ToString("C");
             toString.Should().Be("HA30JA");
         }
@@ -74,9 +75,30 @@ public class Postcode_Tests
         [Test]
         public void Should_Return_Unknown_Postcode_With_Spaces()
         {
-            var postcode = Postcode.Parse("HA3 0JA", PostcodeFormatInfo.Unknown);
+            var postcode = PostalCode.Parse("HA3 0JA", PostalCodeFormatInfo.Unknown);
             var toString = postcode.ToString();
             toString.Should().Be("HA3 0JA");
         }
+
+    }
+}
+
+
+public class PostalcodeFormatInfo_tests
+{
+    [Test]
+    public void Test()
+    {
+        var infos = typeof(PostalCodeFormatInfo).GetProperties()
+            .Where(x => x.PropertyType == typeof(PostalCodeFormatInfo))
+            .Select(x => x.GetValue(null, null))
+            .Distinct()
+            .ToArray();
+
+        var result = typeof(PostalCodeFormatInfo).GetProperty("NL")?.GetValue(null, null);
+
+        var info = PostalCodeFormatInfo.GetInstance(new CultureInfo("nl-NL"));
+
+        result.Should().Be(PostalCodeFormatInfo.NL);
     }
 }

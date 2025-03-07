@@ -35,7 +35,8 @@ public class Initialls_Specs
         [TestCase("?", ExpectedResult = "?")]
         public string should_return_valid_initials(string value)
         {
-            return Initials.Parse(value);
+            var result = Initials.Parse(value);
+            return result;
         }
     }
 

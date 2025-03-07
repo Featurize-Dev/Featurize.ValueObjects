@@ -23,7 +23,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     private static readonly IdBehaviour _behaviour = new TBehavior();
     
     /// <inheritdoc />
-    public static Id<TBehavior> Unknown => new() { _value = "?" };
+    public static Id<TBehavior> Unknown => new() { _value = Constants.UnknownValue };
 
     /// <inheritdoc />
     public static Id<TBehavior> Empty => new();
@@ -50,12 +50,12 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     }
 
     /// <inheritdoc />
-    public override string ToString() => ToString(null, null);
+    public override readonly string ToString() => ToString(null, null);
 
     /// <inheritdoc />
     public readonly string ToString([StringSyntax(nameof(PostcodeStringFormat))]string? format = null, IFormatProvider? formatProvider = null)
     {
-        if (this == Unknown) return "?";
+        if (this == Unknown) return Constants.UnknownValue;
         if (this == Empty) return string.Empty;
         return _behaviour.ToString(_value!);
     }
@@ -93,10 +93,6 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
         }
     }
 
-    /// <inheritdoc />
-    public readonly bool IsEmpty()
-        => this == Empty;
-
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => this.DebuggerDisplay();
 }
