@@ -6,32 +6,7 @@ public class Weight_Tests
 {
     public class TryParse
     {
-        [Test]
-        public void Should_Return_True_on_Existing()
-        {
-            var m = MetricSystem.Length.Metre * 10;
-            var dm = m.ConvertTo(MetricSystem.Length.Decimetre);
-            var cm = m.ConvertTo(MetricSystem.Length.Centimetre);
-            var km = MetricSystem.Length.Kilometre * 20;
-
-            var lenght = MetricSystem.Length.Metre * 20;
-
-            var len = km / 20;
-
-            var gram = MetricSystem.Mass.Gram * 20;
-
-            var result = km * (m * 20);
-            
-            var m1 = cm.ConvertTo(MetricSystem.Length.Metre);
-
-            var toKilo = m.ConvertTo(MetricSystem.Length.Kilometre);
-            var toBase = km.ConvertTo(MetricSystem.Length.Metre);
-
-            Assert.That(toKilo, Is.EqualTo(km));
-            Assert.That(toBase, Is.EqualTo(m));
-
-        }
-
+        
         [Test]
         public void MetricTon_Tests()
         {

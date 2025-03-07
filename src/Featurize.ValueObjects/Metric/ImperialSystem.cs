@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Featurize.ValueObjects.Metric;
+﻿namespace Featurize.ValueObjects.Metric;
 public static class ImperialSystem
 {
     public static Unit Fathom => new(1, "Fathom", "ftm", 6.0761, Foot);

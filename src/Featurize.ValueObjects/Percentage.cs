@@ -15,31 +15,19 @@ namespace Featurize.ValueObjects;
 [JsonConverter(typeof(ValueObjectJsonConverter))]
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 [DebuggerDisplay("{DebuggerDisplay}")]
-public partial record struct Percentage : IValueObject<Percentage>
+public partial record struct Percentage() : IValueObject<Percentage>
 {
-    private decimal? _value;
-    private Percentage(decimal? value)
-    {
-        _value = value;
-    }
-
+    private decimal _value = 0;
+    
     /// <summary>
     /// Gets the unknown percentage value.
     /// </summary>
-    public static Percentage Unknown => new(null);
+    public static Percentage Unknown => new() {  _value = -1 };
 
     /// <summary>
     /// Gets the empty percentage value.
     /// </summary>
-    public static Percentage Empty => new(0);
-
-    /// <summary>
-    /// Creates a new percentage value from a decimal.
-    /// </summary>
-    /// <param name="value">The decimal value.</param>
-    /// <returns>A new <see cref="Percentage"/> instance.</returns>
-    public static Percentage Create(decimal value)
-        => Parse(value.ToString());
+    public static Percentage Empty => new();
 
     /// <summary>
     /// Returns a string that represents the percentage value.
@@ -64,6 +52,9 @@ public partial record struct Percentage : IValueObject<Percentage>
 
         return PercentageParser.ToString(_value);
     }
+
+    public static Percentage Parse(decimal percentage)
+        => Parse(percentage.ToString(), null);
 
     /// <summary>
     /// Parses a string to a <see cref="Percentage"/> value.
@@ -109,7 +100,7 @@ public partial record struct Percentage : IValueObject<Percentage>
 
         if (PercentageParser.TryParse(s, out decimal r))
         {
-            result = new Percentage(r);
+            result = new() {  _value = r };
             return true;
         }
 
@@ -123,19 +114,19 @@ public partial record struct Percentage : IValueObject<Percentage>
     /// Implicitly converts a decimal to a <see cref="Percentage"/> value.
     /// </summary>
     /// <param name="val">The decimal value.</param>
-    public static implicit operator Percentage(decimal val) => Create(val);
+    public static explicit operator Percentage(decimal val) => new() { _value = val };
 
     /// <summary>
     /// Explicitly converts a <see cref="Percentage"/> value to a decimal.
     /// </summary>
     /// <param name="val">The <see cref="Percentage"/> value.</param>
-    public static explicit operator decimal(Percentage val) => val._value ?? 0;
+    public static explicit operator decimal(Percentage val) => val._value;
 
     /// <summary>
     /// Explicitly converts a <see cref="Percentage"/> value to a double.
     /// </summary>
     /// <param name="val">The <see cref="Percentage"/> value.</param>
-    public static explicit operator double(Percentage val) => (double)(val._value ?? 0);
+    public static explicit operator double(Percentage val) => (double)(val._value);
 }
 
 /// <summary>
@@ -159,7 +150,7 @@ public partial record struct Percentage :
     /// <param name="value">The <see cref="Percentage"/> value.</param>
     /// <returns>The incremented <see cref="Percentage"/> value.</returns>
     public static Percentage operator ++(Percentage value)
-        => new(value._value++);
+        => (Percentage)value._value++;
 
     /// <summary>
     /// Decrements the <see cref="Percentage"/> value.
@@ -167,7 +158,7 @@ public partial record struct Percentage :
     /// <param name="value">The <see cref="Percentage"/> value.</param>
     /// <returns>The decremented <see cref="Percentage"/> value.</returns>
     public static Percentage operator --(Percentage value)
-        => new(value._value--);
+        => (Percentage)value._value--;
 
     /// <summary>
     /// Returns the unary plus of the <see cref="Percentage"/> value.
@@ -175,7 +166,7 @@ public partial record struct Percentage :
     /// <param name="value">The <see cref="Percentage"/> value.</param>
     /// <returns>The unary plus of the <see cref="Percentage"/> value.</returns>
     public static Percentage operator +(Percentage value)
-        => new(+value._value);
+        => (Percentage)(+value._value);
 
     /// <summary>
     /// Returns the unary negation of the <see cref="Percentage"/> value.
@@ -183,7 +174,7 @@ public partial record struct Percentage :
     /// <param name="value">The <see cref="Percentage"/> value.</param>
     /// <returns>The unary negation of the <see cref="Percentage"/> value.</returns>
     public static Percentage operator -(Percentage value)
-        => new(-value._value);
+        => (Percentage)(-value._value);
 
     /// <summary>
     /// Adds two <see cref="Percentage"/> values.
@@ -192,7 +183,7 @@ public partial record struct Percentage :
     /// <param name="right">The right <see cref="Percentage"/> value.</param>
     /// <returns>The sum of the two <see cref="Percentage"/> values.</returns>
     public static Percentage operator +(Percentage left, Percentage right)
-        => new(left._value + right._value);
+        => (Percentage)(left._value + right._value);
 
     /// <summary>
     /// Subtracts one <see cref="Percentage"/> value from another.
@@ -201,7 +192,7 @@ public partial record struct Percentage :
     /// <param name="right">The right <see cref="Percentage"/> value.</param>
     /// <returns>The difference between the two <see cref="Percentage"/> values.</returns>
     public static Percentage operator -(Percentage left, Percentage right)
-        => new(left._value - right._value);
+        => (Percentage)(left._value - right._value);
 
     /// <summary>
     /// Multiplies two <see cref="Percentage"/> values.
@@ -210,7 +201,7 @@ public partial record struct Percentage :
     /// <param name="right">The right <see cref="Percentage"/> value.</param>
     /// <returns>The product of the two <see cref="Percentage"/> values.</returns>
     public static Percentage operator *(Percentage left, Percentage right)
-        => new(left._value * right._value);
+        => (Percentage)(left._value * right._value);
 
     /// <summary>
     /// Divides one <see cref="Percentage"/> value by another.
@@ -219,7 +210,7 @@ public partial record struct Percentage :
     /// <param name="right">The right <see cref="Percentage"/> value.</param>
     /// <returns>The quotient of the two <see cref="Percentage"/> values.</returns>
     public static Percentage operator /(Percentage left, Percentage right)
-        => new(left._value / right._value);
+        => (Percentage)(left._value / right._value);
 
     /// <summary>
     /// Divides a <see cref="Percentage"/> value by a decimal.
@@ -228,7 +219,7 @@ public partial record struct Percentage :
     /// <param name="right">The decimal value.</param>
     /// <returns>The quotient of the <see cref="Percentage"/> value and the decimal value.</returns>
     public static Percentage operator /(Percentage left, decimal right)
-        => new((decimal)left / right);
+        => (Percentage)((decimal)left / right);
 
     /// <summary>
     /// Divides a <see cref="Percentage"/> value by an integer.
@@ -237,7 +228,7 @@ public partial record struct Percentage :
     /// <param name="right">The integer value.</param>
     /// <returns>The quotient of the <see cref="Percentage"/> value and the integer value.</returns>
     public static Percentage operator /(Percentage left, int right)
-        => new((decimal)left / right);
+        => (Percentage)((decimal)left / right);
 }
 
 /// <summary>
