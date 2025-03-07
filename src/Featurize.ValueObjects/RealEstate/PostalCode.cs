@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 
 
-namespace Featurize.ValueObjects;
+namespace Featurize.ValueObjects.RealEstate;
 
 
 /// <summary>
@@ -28,7 +28,7 @@ public record struct PostalCode() : IValueObject<PostalCode>, IUnknown<PostalCod
 
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => 
+    private readonly string DebuggerDisplay =>
         this.DebuggerDisplay(x => $"{x.ToString()}: {x._formatName}");
 
     /// <summary>
@@ -36,7 +36,7 @@ public record struct PostalCode() : IValueObject<PostalCode>, IUnknown<PostalCod
     /// </summary>
     public static PostalCode Unknown => new()
     {
-        _value = Constants.UnknownValue,
+        _value = ValueObject.UnknownValue,
         _formatName = PostalCodeFormatInfo.Unknown.Name
     };
 
@@ -74,7 +74,7 @@ public record struct PostalCode() : IValueObject<PostalCode>, IUnknown<PostalCod
             return false;
         }
 
-        if (s == Constants.UnknownValue)
+        if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return false;
@@ -152,12 +152,12 @@ public record struct PostalCode() : IValueObject<PostalCode>, IUnknown<PostalCod
             _ => PostcodeStringFormat.Official,
         };
 
-        if(formatter.Name != Format.Name)
+        if (formatter.Name != Format.Name)
         {
             return Parse(_value, formatter).ToString(format);
         }
 
-        return formatter.ToString(_value, f);        
+        return formatter.ToString(_value, f);
     }
 
     /// <summary>
@@ -202,5 +202,5 @@ public record struct PostalCode() : IValueObject<PostalCode>, IUnknown<PostalCod
     ///     Converts a string to a postalcode.
     /// </summary>
     /// <param name="s"></param>
-    public static explicit operator PostalCode(string s) => PostalCode.Parse(s);
+    public static explicit operator PostalCode(string s) => Parse(s);
 }

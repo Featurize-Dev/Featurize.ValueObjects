@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json.Serialization;
@@ -33,6 +33,9 @@ public record struct Initials() : IValueObject<Initials>
     /// <summary>
     /// Returns a string that represents the <see cref="Initials"/>.
     /// </summary>
+    /// <summary>
+    /// Returns a string that represents the <see cref="Initials"/>.
+    /// </summary>
     /// <returns>string value of the <see cref="Initials"/>.</returns>
     public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
@@ -45,7 +48,7 @@ public record struct Initials() : IValueObject<Initials>
     /// <summary>
     /// An unknown <see cref="Initials"/>.
     /// </summary>
-    public static Initials Unknown => new() { _value = Constants.UnknownValue };
+    public static Initials Unknown => new() { _value = ValueObject.UnknownValue };
     /// <summary>
     /// An empty <see cref="Initials"/>.
     /// </summary>
@@ -77,7 +80,7 @@ public record struct Initials() : IValueObject<Initials>
         {
             return true;
         }
-        if (s == Constants.UnknownValue)
+        if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

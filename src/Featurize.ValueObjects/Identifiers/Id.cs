@@ -1,4 +1,4 @@
-﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Formatting;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
@@ -23,7 +23,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     private static readonly IdBehaviour _behaviour = new TBehavior();
     
     /// <inheritdoc />
-    public static Id<TBehavior> Unknown => new() { _value = Constants.UnknownValue };
+    public static Id<TBehavior> Unknown => new() { _value = ValueObject.UnknownValue };
 
     /// <inheritdoc />
     public static Id<TBehavior> Empty => new();
@@ -55,13 +55,13 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     /// <inheritdoc />
     public readonly string ToString([StringSyntax(nameof(PostcodeStringFormat))]string? format = null, IFormatProvider? formatProvider = null)
     {
-        if (this == Unknown) return Constants.UnknownValue;
+        if (this == Unknown) return ValueObject.UnknownValue;
         if (this == Empty) return string.Empty;
         return _behaviour.ToString(_value!);
     }
 
     /// <inheritdoc />
-    public static Id<TBehavior> Parse(string s) => Parse(s, CultureInfo.InvariantCulture);
+    public static Id<TBehavior> Parse(string s) => Parse(s, null);
 
     /// <inheritdoc />
     public static Id<TBehavior> Parse(string s, IFormatProvider? provider)
@@ -69,7 +69,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
 
     /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Id<TBehavior> result) 
-        => TryParse(s, CultureInfo.InvariantCulture, out result);
+        => TryParse(s, null, out result);
 
     /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Id<TBehavior> result)

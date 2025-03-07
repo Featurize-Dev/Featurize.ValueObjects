@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Featurize.ValueObjects.RealEstate;
+using System.Globalization;
 using System.Net.Http.Headers;
 
 namespace Featurize.ValueObjects.Formatting;

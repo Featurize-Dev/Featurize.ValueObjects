@@ -1,4 +1,5 @@
 ﻿using Featurize.ValueObjects.Formatting;
+using Featurize.ValueObjects.RealEstate;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;

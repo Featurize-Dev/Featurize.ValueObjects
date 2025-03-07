@@ -34,7 +34,7 @@ public record Currency(string Symbol, string Code, string Unit) : IValueObject<C
     /// <summary>
     /// Gets the unknown currency.
     /// </summary>
-    public static Currency Unknown => new(Constants.UnknownValue, "Unknown", "Unknown Currency");
+    public static Currency Unknown => new(ValueObject.UnknownValue, "Unknown", "Unknown Currency");
 
     /// <summary>
     /// Gets the empty currency.
