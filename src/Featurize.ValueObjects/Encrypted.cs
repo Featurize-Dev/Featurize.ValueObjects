@@ -3,7 +3,6 @@ using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -20,9 +19,9 @@ namespace Featurize.ValueObjects;
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
 {
-    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes("?");
+    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(Constants.UnknownValue);
 
-    private byte[] _value = Array.Empty<byte>();
+    private byte[] _value = [];
     
     /// <summary>
     /// Represents an unkown value.
@@ -35,7 +34,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     public static Encrypted<T> Empty => new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => this.DebuggerDisplay();
 
     /// <summary>
     /// Creates an new instance of <see cref="Encrypted{T}"/>.
@@ -71,7 +70,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         {
             try
             {
-                return converter.ConvertFromString("?") is { } unknown
+                return converter.ConvertFromString(Constants.UnknownValue) is { } unknown
                    ? (T?)unknown
                    : default;
             }
@@ -99,11 +98,14 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         return result;
     }
 
+    /// <inheritdoc />
+    public override readonly string ToString() => ToString(null, null);
+
     /// <summary>
     /// Returns a base64 string that represents the encrypted value.
     /// </summary>
     /// <returns></returns>
-    public override readonly string ToString()
+    public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null)
     {
         return Convert.ToBase64String(_value);
     }
@@ -114,7 +116,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// <param name="s">String value of an encrypted value.</param>
     /// <returns></returns>
     public static Encrypted<T> Parse(string s) =>
-        Parse(s, CultureInfo.InvariantCulture);
+        Parse(s, null);
 
     /// <summary>
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
@@ -133,7 +135,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// <param name="result">EmailAddress object.</param>
     /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Encrypted<T> result)
-        => TryParse(s, CultureInfo.InvariantCulture, out result);
+        => TryParse(s, null, out result);
 
     /// <summary>
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
@@ -149,7 +151,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         {
             return true;
         }
-        if (s == "?")
+        if (s == Constants.UnknownValue)
         {
             result = Unknown;
             return true;
