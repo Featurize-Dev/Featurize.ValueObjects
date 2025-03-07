@@ -43,7 +43,7 @@ public class KadestraalNummer : IValueObject<KadestraalNummer>
     
     /// <inhertdoc />
     public static KadestraalNummer Unknown 
-        => new(Constants.UnknownValue, Constants.UnknownValue, -1);
+        => new(ValueObject.UnknownValue, ValueObject.UnknownValue, -1);
 
     /// <inhertdoc />
     public static KadestraalNummer Empty 
@@ -99,7 +99,7 @@ internal partial class KadestraalNummerParser
     {
         if (kn == KadestraalNummer.Unknown)
         {
-            return Constants.UnknownValue;
+            return ValueObject.UnknownValue;
         }
 
         if (kn == KadestraalNummer.Empty)

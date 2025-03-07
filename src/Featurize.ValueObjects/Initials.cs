@@ -80,7 +80,7 @@ public record struct Initials() : IValueObject<Initials>
         {
             return true;
         }
-        if (s == Constants.UnknownValue)
+        if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

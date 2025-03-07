@@ -1,5 +1,9 @@
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Text.Json.Serialization;
+using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Interfaces;
 
 namespace Featurize.ValueObjects.Chemistry;
@@ -7,6 +11,9 @@ namespace Featurize.ValueObjects.Chemistry;
 /// <summary>
 /// Represents an element from the periodic table.
 /// </summary>
+[DebuggerDisplay("{DebuggerDisplay}")]
+[JsonConverter(typeof(ValueObjectJsonConverter))]
+[TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct Element : IValueObject<Element>
 {
     /// <summary>
@@ -32,6 +39,21 @@ public record struct Element : IValueObject<Element>
     public static Element Unknown => new(ValueObject.UnknownValue, nameof(Unknown), 0);
     public static Element Empty => new(string.Empty, nameof(Empty), 0);
 
+    public override string ToString()
+        => ToString(null, null);
+
+    public string ToString(string? format, IFormatProvider? provider)
+        => format switch
+        {
+            "S" => Symbol,
+            "N" => Name,
+            "W" => AtomicWeight.ToString(provider),
+            _ => $"{Symbol} ({Name}) - {AtomicWeight}"
+        };
+
+    private string DebuggerDisplay
+        => this.DebuggerDisplay(x => $"{x.Symbol}: {x.Name} ({x.AtomicWeight})");
+
     public static Element Parse(string s, IFormatProvider? provider)
         => TryParse(s, provider, out var result)
             ? result
@@ -55,8 +77,8 @@ public record struct Element : IValueObject<Element>
     }
 
     public static Element Parse(string s)
-        => Parse(s, CultureInfo.InvariantCulture);
+        => Parse(s, null);
 
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Element result)
-        => TryParse(s, CultureInfo.InvariantCulture, out result);
+        => TryParse(s, null, out result);
 }

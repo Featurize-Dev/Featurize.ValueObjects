@@ -61,7 +61,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
     }
 
     /// <inheritdoc />
-    public static Id<TBehavior> Parse(string s) => Parse(s, CultureInfo.InvariantCulture);
+    public static Id<TBehavior> Parse(string s) => Parse(s, null);
 
     /// <inheritdoc />
     public static Id<TBehavior> Parse(string s, IFormatProvider? provider)
@@ -69,7 +69,7 @@ public record struct Id<TBehavior>() : IValueObject<Id<TBehavior>>
 
     /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Id<TBehavior> result) 
-        => TryParse(s, CultureInfo.InvariantCulture, out result);
+        => TryParse(s, null, out result);
 
     /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Id<TBehavior> result)

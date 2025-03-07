@@ -60,7 +60,7 @@ public partial record struct Percentage : IValueObject<Percentage>
             return string.Empty;
 
         if (this == Unknown)
-            return Constants.UnknownValue;
+            return ValueObject.UnknownValue;
 
         return PercentageParser.ToString(_value);
     }

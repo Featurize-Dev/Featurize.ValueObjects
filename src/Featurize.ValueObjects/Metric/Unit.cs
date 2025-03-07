@@ -1,5 +1,4 @@
 ﻿using Featurize.ValueObjects.Converter;
-using Featurize.ValueObjects.Finance;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -37,9 +36,12 @@ public partial record Unit(double Value, string Name, string Symbol, double Fact
         : this;
 
     public override string ToString()
+        => ToString(null, null);
+
+    public string ToString(string? format, IFormatProvider? provider)
         => 
-        this == Empty ? string.Empty : 
-        this == Unknown ? ValueObject.UnknownValue 
+        this == Empty? string.Empty : 
+        this == Unknown? ValueObject.UnknownValue
         : $"{Value} {Symbol}";
 
     public static Unit Parse(string s)

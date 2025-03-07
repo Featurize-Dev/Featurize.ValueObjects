@@ -1,4 +1,4 @@
-﻿using Featurize.ValueObjects.Finance;
+﻿using Featurize.ValueObjects.Financial;
 
 namespace Featurize.ValueObjects.Tests.Finacial;
 public class Amount_Tests

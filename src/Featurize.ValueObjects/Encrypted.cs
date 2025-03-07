@@ -21,10 +21,9 @@ namespace Featurize.ValueObjects;
 public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
 {
     private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(ValueObject.UnknownValue);
-
-    
-    /// <summary>
     private byte[] _value = [];
+
+    /// <summary>
     /// Represents an unkown value.
     /// </summary>
     public static Encrypted<T> Unknown => new() { _value = _unknown };
@@ -33,6 +32,11 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// Represents an empty value.
     /// </summary>
     public static Encrypted<T> Empty => new();
+
+    public readonly override string ToString() => ToString(null, null);
+
+    public readonly string ToString(string? format, IFormatProvider? formatProvider) 
+        => Convert.ToBase64String(_value);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly string DebuggerDisplay => this.DebuggerDisplay();
@@ -100,23 +104,14 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     }
 
     /// <summary>
-    /// Returns a base64 string that represents the encrypted value.
-    /// </summary>
-    /// <returns></returns>
-    public override readonly string ToString()
-    {
-        return Convert.ToBase64String(_value);
-    }
-
-    /// <summary>
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
     /// </summary>
     /// <param name="s">String value of an encrypted value.</param>
     /// <returns></returns>
     public static Encrypted<T> Parse(string s) =>
+        Parse(s, null);
 
     /// <summary>
-        Parse(s, null);
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
     /// </summary>
     /// <param name="s">String value of an encrypted value.</param>
@@ -133,9 +128,9 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// <param name="result">EmailAddress object.</param>
     /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Encrypted<T> result)
+        => TryParse(s, null, out result);
 
     /// <summary>
-        => TryParse(s, null, out result);
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
     /// </summary>
     /// <param name="s">String value of an encrypted value.</param>

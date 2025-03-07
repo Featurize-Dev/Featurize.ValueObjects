@@ -1,5 +1,4 @@
-﻿using Featurize.ValueObjects.Finance;
-using FluentAssertions;
+﻿using FluentAssertions;
 
 namespace Featurize.ValueObjects.Tests.Finacial;
 public class PercentageTests
