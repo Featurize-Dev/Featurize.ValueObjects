@@ -1,5 +1,4 @@
-﻿using Featurize.ValueObjects.Converter;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Featurize.ValueObjects.Interfaces;
 
@@ -7,9 +6,16 @@ namespace Featurize.ValueObjects.Interfaces;
 /// Marks an object as a ValueObject
 /// </summary>
 /// <typeparam name="TSelf"></typeparam>
-public interface IValueObject<TSelf> : IUnknown<TSelf>, IEmpty<TSelf>, IParsable<TSelf>
-    where TSelf : IUnknown<TSelf>, IEmpty<TSelf>, IParsable<TSelf>
+public interface IValueObject<TSelf> : IUnknown<TSelf>, IEmpty<TSelf>, IParsable<TSelf>, IFormattable
+    where TSelf : IUnknown<TSelf>, IEmpty<TSelf>, IParsable<TSelf>, IFormattable
 {
+
+    /// <summary>
+    /// Returns a string representation of its value.
+    /// </summary>
+    /// <returns></returns>
+    string ToString();
+
     /// <summary>
     /// Parse the string representation of an <typeparamref name="TSelf"/> to its <typeparamref name="TSelf"/> equivalent.
     /// </summary>

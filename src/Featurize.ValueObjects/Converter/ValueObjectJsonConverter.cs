@@ -18,7 +18,7 @@ public sealed class ValueObjectJsonConverter<T> : JsonConverter<T>
         try
         {
             var value = reader.GetString()!;
-            return T.TryParse(value, CultureInfo.InvariantCulture, out var result) ? result : T.Unknown;
+            return T.TryParse(value, out var result) ? result : T.Unknown;
         }
         catch
         {

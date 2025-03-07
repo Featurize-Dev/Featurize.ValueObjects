@@ -1,4 +1,4 @@
-﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -22,9 +22,9 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
 {
     private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(ValueObject.UnknownValue);
 
-    private byte[] _value = Array.Empty<byte>();
     
     /// <summary>
+    private byte[] _value = [];
     /// Represents an unkown value.
     /// </summary>
     public static Encrypted<T> Unknown => new() { _value = _unknown };
@@ -35,7 +35,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     public static Encrypted<T> Empty => new();
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay => this.DebuggerDisplay();
 
     /// <summary>
     /// Creates an new instance of <see cref="Encrypted{T}"/>.
@@ -114,9 +114,9 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// <param name="s">String value of an encrypted value.</param>
     /// <returns></returns>
     public static Encrypted<T> Parse(string s) =>
-        Parse(s, CultureInfo.InvariantCulture);
 
     /// <summary>
+        Parse(s, null);
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
     /// </summary>
     /// <param name="s">String value of an encrypted value.</param>
@@ -133,9 +133,9 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// <param name="result">EmailAddress object.</param>
     /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Encrypted<T> result)
-        => TryParse(s, CultureInfo.InvariantCulture, out result);
 
     /// <summary>
+        => TryParse(s, null, out result);
     /// Converts the string representation to its <see cref="Encrypted{T}"/> equivalent.
     /// </summary>
     /// <param name="s">String value of an encrypted value.</param>

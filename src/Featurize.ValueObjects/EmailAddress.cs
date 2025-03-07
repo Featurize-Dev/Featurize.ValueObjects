@@ -1,4 +1,4 @@
-﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -55,13 +55,16 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     }
 
     /// <inheritdoc />
-    public override readonly string ToString()
+    public override string ToString() => ToString(null, null);
+
+    /// <inheritdoc />
+    public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null)
     {
         return _value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => ToString();
+    private readonly string DebuggerDisplay => this.DebuggerDisplay();
 
     /// <inheritdoc />
     public static EmailAddress Unknown => new() { _value = ValueObject.UnknownValue };
@@ -108,6 +111,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out EmailAddress result)
         => TryParse(s, CultureInfo.InvariantCulture, out result);
+
 }
 
 internal static partial class EmailParser
