@@ -8,8 +8,9 @@ using System.Text.Json.Serialization;
 using System.ComponentModel;
 
 namespace Featurize.ValueObjects.Financial;
+
 /// <summary>
-/// Een waarde-object dat een geldbedrag (Amount) vertegenwoordigt, inclusief verschillende methoden en operatoren voor bewerkingen.
+/// A value object that represents a monetary amount, including various methods and operators for operations.
 /// </summary>
 [JsonConverter(typeof(ValueObjectJsonConverter))]
 [TypeConverter(typeof(ValueObjectTypeConverter))]
@@ -19,70 +20,85 @@ public partial record struct Amount : IValueObject<Amount>
     private decimal? _value = 0;
 
     /// <summary>
-    /// Maakt een nieuwe instantie van <see cref="Amount"/> met de gegeven waarde.
+    /// Creates a new instance of <see cref="Amount"/> with the given value.
     /// </summary>
-    /// <param name="value">De decimale waarde van het bedrag.</param>
+    /// <param name="value">The decimal value of the amount.</param>
     private Amount(decimal? value)
     {
         _value = value;
     }
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount Unknown => new(null);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount Empty => new(0);
 
     /// <summary>
-    /// Zerro
+    /// Gets a zero amount.
     /// </summary>
     public static Amount Zero => Empty;
 
+    /// <summary>
+    /// Gets an amount of one.
+    /// </summary>
     public static Amount One => new(1);
+
+    /// <summary>
+    /// Gets the maximum possible amount.
+    /// </summary>
     public static Amount Max => new(decimal.MaxValue);
+
+    /// <summary>
+    /// Gets the minimum possible amount.
+    /// </summary>
     public static Amount Min => new(decimal.MinValue);
 
     /// <summary>
-    /// Creates an Amount from a decimal value.
+    /// Creates an <see cref="Amount"/> from a decimal value.
     /// </summary>
     /// <param name="value">The decimal amount.</param>
-    /// <returns>An amount</returns>
+    /// <returns>An <see cref="Amount"/> instance.</returns>
     public static Amount Create(decimal value)
         => new(value);
 
     /// <summary>
-    /// Creates an amount from a integer value.
+    /// Creates an <see cref="Amount"/> from an integer value.
     /// </summary>
     /// <param name="value">The integer amount.</param>
-    /// <returns>An amount</returns>
+    /// <returns>An <see cref="Amount"/> instance.</returns>
     public static Amount Create(int value)
         => Create((decimal)value);
 
     /// <summary>
-    /// Creates an amount from a double value.
+    /// Creates an <see cref="Amount"/> from a double value.
     /// </summary>
     /// <param name="value">The double amount.</param>
-    /// <returns>An amount</returns>
+    /// <returns>An <see cref="Amount"/> instance.</returns>
     public static Amount Create(double value)
         => Create((decimal)value);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public override readonly string ToString()
+        => ToString(null, null);
+
+    /// <inheritdoc />
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
         => (_value ?? 0).ToString();
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount Parse(string s)
         => Parse(s, null);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount Parse(string s, IFormatProvider? provider)
         => TryParse(s, provider, out Amount result) ? result : Unknown;
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Amount result)
         => TryParse(s, null, out result);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Amount result)
     {
         result = Empty;
@@ -103,14 +119,19 @@ public partial record struct Amount : IValueObject<Amount>
         return false;
     }
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static implicit operator Amount(decimal val) => Create(val);
-    /// <inhertdoc />
+
+    /// <inheritdoc />
     public static explicit operator decimal(Amount val) => val._value ?? 0;
-    /// <inhertdoc />
+
+    /// <inheritdoc />
     public static explicit operator double(Amount val) => (double)(val._value ?? 0);
 }
 
+/// <summary>
+/// Provides operator overloads for the <see cref="Amount"/> struct.
+/// </summary>
 public partial record struct Amount :
     IIncrementOperators<Amount>,
     IDecrementOperators<Amount>,
@@ -128,108 +149,107 @@ public partial record struct Amount :
     IDivisionOperators<Amount, int, Amount>,
     IDivisionOperators<Amount, Percentage, Amount>
 {
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator +(Amount value)
         => new(+value._value);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator -(Amount value)
        => new(-value._value);
-    
-    /// <inhertdoc />
+
+    /// <inheritdoc />
     public static Amount operator +(Amount left, Amount right)
         => new(left._value + right._value);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator -(Amount left, Amount right)
         => new(left._value - right._value);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator ++(Amount value)
         => new(value._value++);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator --(Amount value)
         => new(value._value--);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator *(Amount left, decimal right)
         => new(left._value * right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator /(Amount left, decimal right)
         => new(left._value / right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator *(Amount left, Percentage right)
         => new(left._value * (decimal)right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static bool operator >(Amount left, Amount right)
         => left._value > right._value;
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static bool operator >=(Amount left, Amount right)
         => right._value >= left._value;
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static bool operator <(Amount left, Amount right)
         => left._value < right._value;
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static bool operator <=(Amount left, Amount right)
         => left._value <= right._value;
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator %(Amount left, decimal right)
         => new(left._value % right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator *(Amount left, double right)
         => new(left._value * (decimal)right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator /(Amount left, double right)
         => new(left._value / (decimal)right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator *(Amount left, int right)
         => new(left._value * right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator /(Amount left, int right)
         => new(left._value / right);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Money operator +(Amount left, Currency right)
         => new(right, left);
 
-    /// <inhertdoc />
+    /// <inheritdoc />
     public static Amount operator /(Amount left, Percentage right)
         => new(left._value / (decimal)right);
 }
 
 /// <summary>
-/// Linq extensions for Amount values.
+/// LINQ extensions for <see cref="Amount"/> values.
 /// </summary>
 public static class AmountLinqExtensions
 {
-
     /// <summary>
-    /// To Sumup all values
+    /// Sums all values in the source.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
+    /// <param name="source">The source collection.</param>
+    /// <returns>The sum of all values.</returns>
     public static Amount Sum(this IEnumerable<Amount> source)
     {
         return source.Aggregate((left, right) => left + right);
     }
 
     /// <summary>
-    /// Returns a Sumerrize of Different money's
+    /// Returns a summary of different monetary values.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
+    /// <param name="source">The source collection.</param>
+    /// <returns>A collection of summarized monetary values.</returns>
     public static IEnumerable<Money> Sum(this IEnumerable<Money> source)
     {
         var currencies = source.GroupBy(x => x.Currency);
@@ -239,11 +259,11 @@ public static class AmountLinqExtensions
     }
 
     /// <summary>
-    /// Sums a all values of a given currency
+    /// Sums all values of a given currency.
     /// </summary>
-    /// <param name="source"></param>
-    /// <param name="currency"></param>
-    /// <returns></returns>
+    /// <param name="source">The source collection.</param>
+    /// <param name="currency">The currency to sum.</param>
+    /// <returns>The sum of all values in the given currency.</returns>
     public static Money Sum(this IEnumerable<Money> source, Currency currency)
     {
         var results = source.Where(x => x.Currency == currency)
@@ -254,20 +274,20 @@ public static class AmountLinqExtensions
     /// <summary>
     /// Sums the amount values of a given type.
     /// </summary>
-    /// <typeparam name="T">The type</typeparam>
-    /// <param name="source">List of types</param>
-    /// <param name="selector">The selctor for the amount value.</param>
-    /// <returns></returns>
+    /// <typeparam name="T">The type of the elements in the source collection.</typeparam>
+    /// <param name="source">The source collection.</param>
+    /// <param name="selector">The selector function to extract the amount value.</param>
+    /// <returns>The sum of the selected amount values.</returns>
     public static Amount Sum<T>(this IEnumerable<T> source, Func<T, Amount> selector)
         => Sum(source.Select(selector));
 
     /// <summary>
-    /// Summerize
+    /// Summarizes the monetary values of a given type.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="source"></param>
-    /// <param name="selector"></param>
-    /// <returns></returns>
+    /// <typeparam name="T">The type of the elements in the source collection.</typeparam>
+    /// <param name="source">The source collection.</param>
+    /// <param name="selector">The selector function to extract the monetary value.</param>
+    /// <returns>A collection of summarized monetary values.</returns>
     public static IEnumerable<Money> Sum<T>(this IEnumerable<T> source, Func<T, Money> selector)
     {
         var results = source.Select(selector).GroupBy(x => x.Currency)
@@ -275,6 +295,14 @@ public static class AmountLinqExtensions
         return results;
     }
 
+    /// <summary>
+    /// Sums the monetary values of a given type for a specific currency.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the source collection.</typeparam>
+    /// <param name="source">The source collection.</param>
+    /// <param name="selector">The selector function to extract the monetary value.</param>
+    /// <param name="currency">The currency to sum.</param>
+    /// <returns>The sum of the selected monetary values for the given currency.</returns>
     public static Money Sum<T>(this IEnumerable<T> source, Func<T, Money> selector, Currency currency)
     {
         var results = source

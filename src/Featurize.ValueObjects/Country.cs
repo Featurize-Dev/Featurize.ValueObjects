@@ -3,7 +3,6 @@ using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Interfaces;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;

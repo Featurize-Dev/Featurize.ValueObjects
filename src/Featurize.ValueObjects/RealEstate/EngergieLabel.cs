@@ -8,52 +8,129 @@ using System.Text.Json.Serialization;
 namespace Featurize.ValueObjects.RealEstate;
 
 /// <summary>
-/// Represents an EnergieLabel
+/// Represents an EnergieLabel.
 /// </summary>
 [JsonConverter(typeof(ValueObjectJsonConverter))]
 [TypeConverter(typeof(ValueObjectTypeConverter))]
-[DebuggerDisplay("{ToDebuggerString()}")]
+[DebuggerDisplay("{DebuggerDisplay}")]
 public sealed record Energielabel
     : IValueObject<Energielabel>
 {
+    /// <summary>
+    /// Gets the A++++ energy label.
+    /// </summary>
     public static Energielabel A4 => new() { _label = "A++++" };
+
+    /// <summary>
+    /// Gets the A+++ energy label.
+    /// </summary>
     public static Energielabel A3 => new() { _label = "A+++" };
+
+    /// <summary>
+    /// Gets the A++ energy label.
+    /// </summary>
     public static Energielabel A2 => new() { _label = "A++" };
+
+    /// <summary>
+    /// Gets the A+ energy label.
+    /// </summary>
     public static Energielabel A1 => new() { _label = "A+" };
+
+    /// <summary>
+    /// Gets the A energy label.
+    /// </summary>
     public static Energielabel A => new() { _label = "A" };
+
+    /// <summary>
+    /// Gets the B energy label.
+    /// </summary>
     public static Energielabel B => new() { _label = "B" };
+
+    /// <summary>
+    /// Gets the C energy label.
+    /// </summary>
     public static Energielabel C => new() { _label = "C" };
+
+    /// <summary>
+    /// Gets the D energy label.
+    /// </summary>
     public static Energielabel D => new() { _label = "D" };
+
+    /// <summary>
+    /// Gets the E energy label.
+    /// </summary>
     public static Energielabel E => new() { _label = "E" };
+
+    /// <summary>
+    /// Gets the F energy label.
+    /// </summary>
     public static Energielabel F => new() { _label = "F" };
 
     private Energielabel() { }
 
     private string _label = string.Empty;
-    private const string _unknownValue = "?";
-    
-    public static Energielabel Unknown => new() {  _label = _unknownValue };
 
+    /// <summary>
+    /// Gets the unknown energy label.
+    /// </summary>
+    public static Energielabel Unknown => new() { _label = Constants.UnknownValue };
+
+    /// <summary>
+    /// Gets the empty energy label.
+    /// </summary>
     public static Energielabel Empty => new() { _label = string.Empty };
 
-    public override string ToString()
+    /// <summary>
+    /// Returns a string that represents the energy label.
+    /// </summary>
+    /// <returns>A string representation of the energy label.</returns>
+    public override string ToString() => ToString(null, null);
+
+    /// <summary>
+    /// Returns a string that represents the energy label.
+    /// </summary>
+    /// <param name="format">The format to use.</param>
+    /// <param name="formatProvider">The format provider to use.</param>
+    /// <returns>A string representation of the energy label.</returns>
+    public string ToString(string? format, IFormatProvider? formatProvider)
         => EnergieLabelFormatter.ToString(_label);
 
-    private string ToDebuggerString()
-    {
-        return this == Empty ? "{Empty}": ToString();
-    }
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+    private string DebuggerDisplay => this.DebuggerDisplay();
 
+    /// <summary>
+    /// Parses a string to an <see cref="Energielabel"/> value.
+    /// </summary>
+    /// <param name="s">The string to parse.</param>
+    /// <returns>An <see cref="Energielabel"/> value.</returns>
     public static Energielabel Parse(string s)
         => Parse(s, null);
 
+    /// <summary>
+    /// Parses a string to an <see cref="Energielabel"/> value.
+    /// </summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="provider">The format provider to use.</param>
+    /// <returns>An <see cref="Energielabel"/> value.</returns>
     public static Energielabel Parse(string s, IFormatProvider? provider)
         => TryParse(s, provider, out var result) ? result : throw new FormatException();
 
+    /// <summary>
+    /// Tries to parse a string to an <see cref="Energielabel"/> value.
+    /// </summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="result">The parsed <see cref="Energielabel"/> value.</param>
+    /// <returns>true if the string was parsed successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Energielabel result)
         => TryParse(s, null, out result);
 
-
+    /// <summary>
+    /// Tries to parse a string to an <see cref="Energielabel"/> value.
+    /// </summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="provider">The format provider to use.</param>
+    /// <param name="result">The parsed <see cref="Energielabel"/> value.</param>
+    /// <returns>true if the string was parsed successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Energielabel result)
     {
         if (string.IsNullOrEmpty(s))
@@ -62,7 +139,7 @@ public sealed record Energielabel
             return true;
         }
 
-        if (s == _unknownValue)
+        if (s == Constants.UnknownValue)
         {
             result = Unknown;
             return true;
@@ -78,21 +155,38 @@ public sealed record Energielabel
     }
 }
 
-
+/// <summary>
+/// Provides parsing and formatting methods for <see cref="Energielabel"/> values.
+/// </summary>
 public static class EnergieLabelFormatter
 {
+    /// <summary>
+    /// Converts a string value to an energy label string.
+    /// </summary>
+    /// <param name="value">The string value.</param>
+    /// <returns>An energy label string.</returns>
     public static string ToString(string value)
     {
         return value;
     }
 
+    /// <summary>
+    /// Tries to parse a string to an <see cref="Energielabel"/> value.
+    /// </summary>
+    /// <param name="s">The string to parse.</param>
+    /// <param name="result">The parsed <see cref="Energielabel"/> value.</param>
+    /// <returns>true if the string was parsed successfully; otherwise, false.</returns>
     public static bool TryParse(string s, out Energielabel result)
     {
         result = Parse(s);
         return true;
-
     }
 
+    /// <summary>
+    /// Parses a string to an <see cref="Energielabel"/> value.
+    /// </summary>
+    /// <param name="s">The string to parse.</param>
+    /// <returns>An <see cref="Energielabel"/> value.</returns>
     public static Energielabel Parse(string s)
         => s switch
         {
@@ -109,4 +203,3 @@ public static class EnergieLabelFormatter
             _ => Energielabel.Unknown,
         };
 }
-

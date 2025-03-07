@@ -39,17 +39,23 @@ public class KadestraalNummer : IValueObject<KadestraalNummer>
     /// <param name="perceelNummer">Het perceelnummer binnen de sectie.</param>
     /// <returns></returns>
     public static KadestraalNummer Create(string gemeenteCode, string sectieCode, int perceelNummer)
-    {
-        return new(gemeenteCode, sectieCode, perceelNummer);
-    }
+        => new(gemeenteCode, sectieCode, perceelNummer);
+    
     /// <inhertdoc />
-    public static KadestraalNummer Unknown => new("?", "?", -1);
+    public static KadestraalNummer Unknown 
+        => new(Constants.UnknownValue, Constants.UnknownValue, -1);
 
     /// <inhertdoc />
-    public static KadestraalNummer Empty => new(string.Empty, string.Empty, -1);
+    public static KadestraalNummer Empty 
+        => new(string.Empty, string.Empty, -1);
 
     /// <inhertdoc />
-    public override string ToString() => KadestraalNummerParser.ToString(this);
+    public override string ToString() 
+        => ToString(null, null);
+
+    /// <inhertdoc />
+    public string ToString(string? format, IFormatProvider? formatProvider)
+        => KadestraalNummerParser.ToString(this);
 
     /// <inhertdoc />
     public static KadestraalNummer Parse(string s)
@@ -88,13 +94,12 @@ public class KadestraalNummer : IValueObject<KadestraalNummer>
 
 internal partial class KadestraalNummerParser
 {
-    private const string UnknownValue = "?";
-
+    
     public static string ToString(KadestraalNummer kn)
     {
         if (kn == KadestraalNummer.Unknown)
         {
-            return UnknownValue;
+            return Constants.UnknownValue;
         }
 
         if (kn == KadestraalNummer.Empty)
