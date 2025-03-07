@@ -27,19 +27,25 @@ public record struct Initials() : IValueObject<Initials>
     /// <summary>
     /// Returns a string that represents the <see cref="Initials"/>.
     /// </summary>
+    /// <returns>string value of the <see cref="Initials"/></returns>
+    public override readonly string ToString() => ToString(null, null);
+
+    /// <summary>
+    /// Returns a string that represents the <see cref="Initials"/>.
+    /// </summary>
     /// <returns>string value of the <see cref="Initials"/>.</returns>
-    public readonly override string ToString()
+    public readonly string ToString(string? format, IFormatProvider? formatProvider)
     {
         return _value;
     }
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private readonly string DebuggerDisplay => this.IsEmpty() ? "{empty}" : ToString();
+    private readonly string DebuggerDisplay =>  this.DebuggerDisplay();
 
     /// <summary>
     /// An unknown <see cref="Initials"/>.
     /// </summary>
-    public static Initials Unknown => new() { _value = "?" };
+    public static Initials Unknown => new() { _value = Constants.UnknownValue };
     /// <summary>
     /// An empty <see cref="Initials"/>.
     /// </summary>
@@ -71,7 +77,7 @@ public record struct Initials() : IValueObject<Initials>
         {
             return true;
         }
-        else if ("?" == s)
+        if (s == Constants.UnknownValue)
         {
             result = Unknown;
             return true;
@@ -96,7 +102,7 @@ public record struct Initials() : IValueObject<Initials>
     /// <returns>Returns Initials object.</returns>
     /// <exception cref="FormatException"></exception>
     public static Initials Parse(string s)
-        => Parse(s, CultureInfo.InvariantCulture);
+        => Parse(s, null);
 
     /// <summary>
     /// Tries to convert the string representation of initials to its <see cref="Initials"/> equivalent, and returns a value that indicates whether the conversion succeeded.
@@ -105,7 +111,7 @@ public record struct Initials() : IValueObject<Initials>
     /// <param name="result">Returns Initials object.</param>
     /// <returns>true if s was converted successfully; otherwise, false.</returns>
     public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Initials result)
-        => TryParse(s, CultureInfo.InvariantCulture, out result);
+        => TryParse(s, null, out result);
 
     /// <summary>
     /// Extracts initials from joined names
@@ -116,4 +122,10 @@ public record struct Initials() : IValueObject<Initials>
     {
         return TryParse(string.Join("", names.Split(' ').Select(s => s.First())), out var results) ? results : Empty;
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="initials"></param>
+    public static implicit operator string(Initials initials) => initials.ToString(null, null);
 }

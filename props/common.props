@@ -8,7 +8,6 @@
     <PackageTags>Feature Driven Development; Feature Driven Architecture</PackageTags>
     <Company>Featurize</Company>
     <Copyright>Copyright © Featurize 2022</Copyright>
-    <LangVersion>11.0</LangVersion>
 
 	  <TargetFrameworks>net7.0; net8.0</TargetFrameworks>
 	  <ImplicitUsings>enable</ImplicitUsings>

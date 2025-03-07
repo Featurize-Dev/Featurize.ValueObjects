@@ -1,11 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>12.0</LangVersion>
+  </PropertyGroup>
   <Import Project="..\..\props\package.props" />
-	
-  <ItemGroup>
-    <Compile Remove="Converters\**" />
-    <EmbeddedResource Remove="Converters\**" />
-    <None Remove="Converters\**" />
-  </ItemGroup>
 	
   <ItemGroup>
     <None Remove="Country.csv" />
