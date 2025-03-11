@@ -1,4 +1,4 @@
-﻿using CsvHelper;
+using CsvHelper;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using Featurize.ValueObjects.Converter;
@@ -24,7 +24,7 @@ public record struct Country() : IValueObject<Country>
     /// <summary>
     /// Unknown country.
     /// </summary>
-    public static Country Unknown => new() { _value = Constants.UnknownValue };
+    public static Country Unknown => new() { _value = ValueObject.UnknownValue };
 
     /// <summary>
     /// Empty country object.
@@ -108,7 +108,7 @@ public record struct Country() : IValueObject<Country>
     public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Country result)
     {
         result = Unknown;
-        if (s == Constants.UnknownValue)
+        if (s == ValueObject.UnknownValue)
         {
             return true;
         }

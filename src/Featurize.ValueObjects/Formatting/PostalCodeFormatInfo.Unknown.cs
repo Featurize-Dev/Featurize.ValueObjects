@@ -1,4 +1,6 @@
-﻿namespace Featurize.ValueObjects.Formatting;
+﻿using Featurize.ValueObjects.RealEstate;
+
+namespace Featurize.ValueObjects.Formatting;
 
 internal class UnknownPostalCodeInfo() : PostalCodeFormatInfo("Unknown")
 {

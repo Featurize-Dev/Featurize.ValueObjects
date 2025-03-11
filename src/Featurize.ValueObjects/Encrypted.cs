@@ -1,8 +1,9 @@
-﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -19,10 +20,9 @@ namespace Featurize.ValueObjects;
 [TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
 {
-    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(Constants.UnknownValue);
-
+    private static readonly byte[] _unknown = Encoding.UTF8.GetBytes(ValueObject.UnknownValue);
     private byte[] _value = [];
-    
+
     /// <summary>
     /// Represents an unkown value.
     /// </summary>
@@ -32,6 +32,11 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
     /// Represents an empty value.
     /// </summary>
     public static Encrypted<T> Empty => new();
+
+    public readonly override string ToString() => ToString(null, null);
+
+    public readonly string ToString(string? format, IFormatProvider? formatProvider) 
+        => Convert.ToBase64String(_value);
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly string DebuggerDisplay => this.DebuggerDisplay();
@@ -70,7 +75,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         {
             try
             {
-                return converter.ConvertFromString(Constants.UnknownValue) is { } unknown
+                return converter.ConvertFromString(ValueObject.UnknownValue) is { } unknown
                    ? (T?)unknown
                    : default;
             }
@@ -96,18 +101,6 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
             return default;
         }
         return result;
-    }
-
-    /// <inheritdoc />
-    public override readonly string ToString() => ToString(null, null);
-
-    /// <summary>
-    /// Returns a base64 string that represents the encrypted value.
-    /// </summary>
-    /// <returns></returns>
-    public readonly string ToString(string? format = null, IFormatProvider? formatProvider = null)
-    {
-        return Convert.ToBase64String(_value);
     }
 
     /// <summary>
@@ -151,7 +144,7 @@ public record struct Encrypted<T>() : IValueObject<Encrypted<T>>
         {
             return true;
         }
-        if (s == Constants.UnknownValue)
+        if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

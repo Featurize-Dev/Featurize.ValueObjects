@@ -73,7 +73,7 @@ public sealed record Energielabel
     /// <summary>
     /// Gets the unknown energy label.
     /// </summary>
-    public static Energielabel Unknown => new() { _label = Constants.UnknownValue };
+    public static Energielabel Unknown => new() { _label = ValueObject.UnknownValue };
 
     /// <summary>
     /// Gets the empty energy label.
@@ -139,7 +139,7 @@ public sealed record Energielabel
             return true;
         }
 
-        if (s == Constants.UnknownValue)
+        if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

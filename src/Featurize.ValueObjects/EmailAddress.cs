@@ -1,4 +1,4 @@
-﻿using Featurize.ValueObjects.Converter;
+using Featurize.ValueObjects.Converter;
 using Featurize.ValueObjects.Interfaces;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -16,7 +16,7 @@ namespace Featurize.ValueObjects;
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay}")]
 [JsonConverter(typeof(ValueObjectJsonConverter))]
-
+[TypeConverter(typeof(ValueObjectTypeConverter))]
 public record struct EmailAddress() : IValueObject<EmailAddress>
 {
     private string _value = string.Empty;
@@ -67,7 +67,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
     private readonly string DebuggerDisplay => this.DebuggerDisplay();
 
     /// <inheritdoc />
-    public static EmailAddress Unknown => new() { _value = Constants.UnknownValue };
+    public static EmailAddress Unknown => new() { _value = ValueObject.UnknownValue };
 
     /// <inheritdoc />
     public static EmailAddress Empty => new();
@@ -86,7 +86,7 @@ public record struct EmailAddress() : IValueObject<EmailAddress>
         {
             return true;
         }
-        else if (s == Constants.UnknownValue)
+        else if (s == ValueObject.UnknownValue)
         {
             result = Unknown;
             return true;

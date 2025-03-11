@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using Featurize.ValueObjects.RealEstate;
+using System.Text.RegularExpressions;
 
 namespace Featurize.ValueObjects.Formatting;
 
